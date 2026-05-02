@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {   Roboto } from "next/font/google";
 import "./globals.css";
 import {Toaster} from 'sonner'
+import QueryProvider from "@/services/helper/provider/QueryProvider";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -26,7 +27,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-black text-white">
         <Toaster richColors position="top-right" closeButton/>
+        <QueryProvider>
         {children}
+        </QueryProvider>
         </body>
     </html>
   );

@@ -74,7 +74,7 @@ const Login = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="flex flex-col gap-4">
               {loginInputFields.map((input) => (
-                <DynamicInput
+                <DynamicInput<LoginFormType>
                   key={input.name}
                   label={input.label}
                   name={input.name}
@@ -83,6 +83,7 @@ const Login = () => {
                   error={errors[input.name as keyof LoginFormType]?.message}
                   register={register}
                   loading={loading}
+                  placeholder={input.placeholder}
                 />
               ))}
             </div>

@@ -1,18 +1,24 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { UserPlus } from 'lucide-react';
+import { useState, useSyncExternalStore } from "react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { UserPlus } from "lucide-react";
+import ProfileDialog from "./ProfileDialog";
 
 interface ProfileHeaderProps {
   name: string;
-  bio: string ;
+  bio: string;
   postsCount: number;
   followersCount: number;
   followingCount: number;
-  profileImage: string ;
+  profileImage: string;
   isOwnProfile?: boolean;
   isFollowing?: boolean;
 }
@@ -30,6 +36,19 @@ export default function ProfileHeader({
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [following, setFollowing] = useState(isFollowing);
+  const [open, setOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
+  function useIsClient() {
+    return useSyncExternalStore(
+      () => () => {}, // Empty subscribe function
+      () => true, // Client-side value
+      () => false, // Server-side/Hydration value
+    );
+  }
+
+  const isClient = useIsClient();
+  if (!isClient) return null;
 
   return (
     <>
@@ -41,13 +60,17 @@ export default function ProfileHeader({
             {/* Profile Picture */}
             <div className="shrink-0">
               <div className="relative w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-[#D493FF]">
-                <Image
-                  src={profileImage}
-                  alt={name}
-                  fill
-                  className="object-cover z-0"
-                  sizes="(max-width: 768px) 96px, 144px"
-                />
+                {isClient && profileImage ? (
+                  <Image
+                    src={profileImage}
+                    alt={"image"}
+                    fill
+                    className="object-cover z-0"
+                    sizes="(max-width: 768px) 96px, 144px"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-600" />
+                )}
               </div>
             </div>
 
@@ -55,10 +78,15 @@ export default function ProfileHeader({
             <div className="flex-1 w-full md:w-auto text-center md:text-left">
               {/* Name and Edit Button */}
               <div className="flex flex-col md:flex-row items-center md:items-center gap-3 mb-4">
-                <h1 className="text-2xl md:text-3xl font-bold text-white">{name}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                  {isClient ? name : ""}
+                </h1>
                 {isOwnProfile ? (
                   <Button
-                   
+                    onClick={() => {
+                      setOpen(true);
+                      setIsEdit(true);
+                    }}
                     className=" bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black w-full md:w-auto font-bold px-12"
                   >
                     Edit Profile
@@ -69,37 +97,58 @@ export default function ProfileHeader({
                     onClick={() => setFollowing(!following)}
                   >
                     <UserPlus className="w-4 h-4" />
-                    {following ? 'Following' : 'Follow'}
+                    {following ? "Following" : "Follow"}
                   </Button>
                 )}
               </div>
 
+              <ProfileDialog
+                open={open}
+                setOpen={setOpen}
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}
+              />
+
               {/* Stats */}
               <div className="flex justify-center md:justify-start gap-6 md:gap-8 mb-4">
                 <div className="flex flex-col items-center md:items-start cursor-pointer hover:opacity-80 transition-opacity">
-                  <span className="font-bold text-lg md:text-xl text-white">{postsCount}</span>
-                  <span className="text-xs md:text-sm text-[#A1A1AA]">Posts</span>
+                  <span className="font-bold text-lg md:text-xl text-white">
+                    {postsCount}
+                  </span>
+                  <span className="text-xs md:text-sm text-[#A1A1AA]">
+                    Posts
+                  </span>
                 </div>
                 <div
                   className="flex flex-col items-center md:items-start cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setShowFollowers(true)}
                 >
-                  <span className="font-bold text-lg md:text-xl text-white">{followersCount.toLocaleString()}</span>
-                  <span className="text-xs md:text-sm text-[#A1A1AA]">Followers</span>
+                  <span className="font-bold text-lg md:text-xl text-white">
+                    {followersCount.toLocaleString()}
+                  </span>
+                  <span className="text-xs md:text-sm text-[#A1A1AA]">
+                    Followers
+                  </span>
                 </div>
                 <div
                   className="flex flex-col items-center md:items-start cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setShowFollowing(true)}
                 >
-                  <span className="font-bold text-lg md:text-xl text-white">{followingCount}</span>
-                  <span className="text-xs md:text-sm text-[#A1A1AA]">Following</span>
+                  <span className="font-bold text-lg md:text-xl text-white">
+                    {followingCount}
+                  </span>
+                  <span className="text-xs md:text-sm text-[#A1A1AA]">
+                    Following
+                  </span>
                 </div>
               </div>
 
               {/* Bio */}
               {bio && (
                 <div className="text-center md:text-left">
-                  <p className="text-sm md:text-base text-white leading-relaxed">{bio}</p>
+                  <p className="text-sm md:text-base text-white leading-relaxed">
+                    {bio}
+                  </p>
                 </div>
               )}
             </div>
@@ -115,14 +164,23 @@ export default function ProfileHeader({
           </DialogHeader>
           <div className="space-y-4 max-h-80 overflow-y-auto">
             {Array.from({ length: followersCount }).map((_, i) => (
-              <div key={i} className="flex items-center justify-between p-3 hover:bg-[#262626] rounded-lg transition-colors">
+              <div
+                key={i}
+                className="flex items-center justify-between p-3 hover:bg-[#262626] rounded-lg transition-colors"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#D493FF]/20 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-[#D493FF]">{i + 1}</span>
+                    <span className="text-sm font-semibold text-[#D493FF]">
+                      {i + 1}
+                    </span>
                   </div>
                   <span className="text-sm">Follower {i + 1}</span>
                 </div>
-                <Button variant="ghost" size="sm" className="text-[#D493FF] hover:bg-[#262626]">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-[#D493FF] hover:bg-[#262626]"
+                >
                   Remove
                 </Button>
               </div>
@@ -139,14 +197,23 @@ export default function ProfileHeader({
           </DialogHeader>
           <div className="space-y-4 max-h-80 overflow-y-auto">
             {Array.from({ length: followingCount }).map((_, i) => (
-              <div key={i} className="flex items-center justify-between p-3 hover:bg-[#262626] rounded-lg transition-colors">
+              <div
+                key={i}
+                className="flex items-center justify-between p-3 hover:bg-[#262626] rounded-lg transition-colors"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#D493FF]/20 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-[#D493FF]">{i + 1}</span>
+                    <span className="text-sm font-semibold text-[#D493FF]">
+                      {i + 1}
+                    </span>
                   </div>
                   <span className="text-sm">Following {i + 1}</span>
                 </div>
-                <Button variant="ghost" size="sm" className="text-[#A1A1AA] hover:bg-[#262626]">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-[#A1A1AA] hover:bg-[#262626]"
+                >
                   Unfollow
                 </Button>
               </div>

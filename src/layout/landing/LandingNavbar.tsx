@@ -1,19 +1,27 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import {  useState, useSyncExternalStore } from "react";
 
 const LandingNavbar = () => {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [mounted, setMounted] = useState(false);
   const { token, logoutUser } = useAuthStore();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+function useIsClinet (){
+    return useSyncExternalStore(
+      ()=> ()=> {},
+      ()=> true,
+      ()=> false
 
-  if (!mounted) return null;
+    )
+  }
+
+  const isClient = useIsClinet()
+  if(!isClient) return null
+
+
+  
 
   return (
     <nav className="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 bg-[#0D0D0D]/70 ">
@@ -25,7 +33,7 @@ const LandingNavbar = () => {
           SocialSphere+
         </div>
         <div className="hidden md:flex items-center gap-8">
-          {mounted &&
+          {isClient &&
             (token ? (
               <button
                 className="text-gray-400 hover:text-[#D493FF] transition-colors"

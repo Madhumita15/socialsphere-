@@ -74,7 +74,7 @@ const Register = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="flex flex-col gap-3">
                 {registerInputFields.map((input) => (
-                  <DynamicInput
+                  <DynamicInput<RegisterFormType>
                     key={input.name}
                     label={input.label}
                     name={input.name}
@@ -85,6 +85,7 @@ const Register = () => {
                     }
                     register={register}
                     loading={loading}
+                    placeholder={input.placeholder}
                   />
                 ))}
               </div>

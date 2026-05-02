@@ -15,6 +15,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSyncExternalStore } from "react";
+
 
 const UserSidebar = () => {
   const pathname = usePathname();
@@ -26,6 +28,21 @@ const UserSidebar = () => {
     { path: "/user/direct", name: "Direct", icon: MessageSquare },
     { path: "/user/profile", name: "Profile", icon: User },
   ];
+
+  function useIsClinet (){
+    return useSyncExternalStore(
+      ()=> ()=> {},
+      ()=> true,
+      ()=> false
+
+    )
+  }
+
+  const isClient = useIsClinet()
+  if(!isClient) return null
+
+ 
+ 
   return (
     <div>
       <div className=" flex-col pt-12 fixed left-0 top-0 hidden md:block">
@@ -77,25 +94,23 @@ const UserSidebar = () => {
         <div className="absolute md:-bottom-11/12 lg:-bottom-52 p-5 bg-[#121111] md:w-64 lg:w-[288px] h-26 flex items-center gap-2">
           <div className="flex w-8 h-8 rounded-full  bg-[#4d4c4c] items-center justify-center ">
             <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#FF7354]">
-              {user?.avatar_url ? (
+              {isClient && user?.avatar_url ? (
                 <Image
-                  src={user.avatar_url}
+                  src={user?.avatar_url}
                   alt="image"
                   width={36}
                   height={36}
                   className="w-full h-full object-cover"
                 />
-              ) : (
-                <div className="w-full h-full bg-gray-300 flex items-center justify-center text-xs">
-                  No
-                </div>
-              )}
+              ) : <div className="w-full h-full bg-gray-600" />}
             </div>
           </div>
-          <div className="flex flex-col">
-            <p>{user?.fullname}</p>
-            <p>{user?.email}</p>
-          </div>
+         
+            <div className="flex flex-col">
+              <p>{isClient ? user?.fullname : ""}</p>
+              <p>{isClient ? user?.email : ""}</p>
+            </div>
+       
         </div>
       </div>
 

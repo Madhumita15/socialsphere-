@@ -1,4 +1,4 @@
-import { OAuthResponse } from "@supabase/supabase-js";
+
 import { ProfileInterfaceType } from "../interface/auth.interface";
 
 export type RegisterFormType = {
@@ -62,6 +62,15 @@ export type AuthType = {
   user: ProfileType
 }
 
+
+export type ProfileFormType = {
+  fullname: string;
+  username: string;
+  bio: string;
+  phone: string;
+  avatar_url?: File | null
+};
+
 export type AuthStore = {
   loading: boolean;
   error: string | null;
@@ -77,4 +86,13 @@ export type AuthStore = {
   googleLogin: ()=> Promise<GoogleResponse>;
   setAuth: (data: AuthType)=> void 
   logoutUser: () => void;
+  editUserProfile: (data: ProfileFormType)=> Promise<ProfileResponse>
+
 };
+
+export type ProfileDialogPropsType = {
+  open: boolean
+  isEdit: boolean
+  setOpen: (open: boolean)=> void
+  setIsEdit: (isEdit: boolean)=> void
+}

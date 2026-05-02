@@ -4,10 +4,11 @@ import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import {
   AuthStore,
   LoginFormType,
+  ProfileFormType,
   RegisterFormType,
 } from "@/typescript/type/auth.type";
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   loading: false,
   error: null,
   tempAuthData: null,
@@ -125,6 +126,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
       };
     }
   },
+
+
   userProfile: async ({ bio, image }) => {
     set({ loading: true, error: null });
     try {
@@ -194,6 +197,78 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
+
+  editUserProfile: async (data:ProfileFormType) => {
+    set({ loading: true, error: null });
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData) throw "User Not found";
+      const id = userData.user?.id
+      const currentUser = get().user;
+
+      let imageurl = currentUser?.avatar_url;
+      if (data.avatar_url instanceof File) {
+        if (currentUser?.avatar_url) {
+          const oldPath = currentUser.avatar_url.split("/profile_image/")[1];
+          if (oldPath) {
+            await supabase.storage.from("profile_image").remove([oldPath]);
+          }
+
+          const filename = `${crypto.randomUUID()}.${data.avatar_url.name}`;
+          const { data: imageUploadData, error: imageUploadError } =
+            await supabase.storage
+              .from("profile_image")
+              .upload(filename, data.avatar_url);
+          if (imageUploadError) throw imageUploadError;
+          console.log("imageuploadData", imageUploadData);
+          const { data: imageviewData } = supabase.storage
+            .from("profile_image")
+            .getPublicUrl(filename);
+          imageurl = imageviewData.publicUrl;
+        }
+      }
+
+      const updatePayload: {fullname: string, username: string, bio: string, phone: string, avatar_url?: string} = {
+        fullname: data.fullname,
+        username: data.username,
+        bio: data.bio,
+        phone: data.phone,
+      };
+
+      if (data.avatar_url instanceof File) {
+        updatePayload.avatar_url = imageurl;
+      }
+
+      const { data: updateProfileData, error: updatedProfileError } =
+        await supabase
+          .from("profile")
+          .update(updatePayload)
+          .eq("auth_user_id", id)
+          .select()
+          .single();
+      if (updatedProfileError) throw updatedProfileError;
+      console.log("updatedProfileData", updateProfileData);
+      set({
+        loading: false,
+        error: null,
+        user: {
+          ...currentUser,
+          ...updateProfileData,
+        },
+      });
+      return {
+        success: true,
+        message: "User update profile Successfully!",
+      };
+    } catch {
+      set({ loading: false, error: "Failed to Edit Profile" });
+      return {
+        success: false,
+        message: "Failed to edit Profile",
+      };
+    }
+  },
+
   googleLogin: async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -214,6 +289,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       };
     }
   },
+
   setAuth: ({ token, user, role }) => {
     set({
       token: token,

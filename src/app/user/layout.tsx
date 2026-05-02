@@ -1,6 +1,10 @@
+
+
 import type { Metadata } from "next";
-import UserSidebar from "../../layout/user/UserSidebar";
 import UserNavbar from "../../layout/user/UserNavbar";
+import UserSidebar from "@/layout/user/UserSidebar";
+
+
 
 export const metadata: Metadata = {
   title: "userpanel",

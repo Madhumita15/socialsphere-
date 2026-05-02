@@ -1,6 +1,6 @@
 'use client'
 
-import { Heart, MessageCircle, Share2, Bookmark, ArrowLeft } from 'lucide-react'
+import { Heart, MessageCircle, Share2, Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface ReelsVideoProps {
@@ -28,6 +28,7 @@ export function ReelsVideo({
         loop
         muted
         autoPlay
+        controls
         playsInline
       />
 

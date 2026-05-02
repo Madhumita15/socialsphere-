@@ -1,15 +1,15 @@
 'use client';
 
+import { PostsGridProps } from '@/typescript/interface/post.interface';
 import Image from 'next/image';
-import { Play } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-interface PostsGridProps {
-  items: Array<{ id: string; type: 'post' | 'reel'; url: string }>;
-  isReels?: boolean;
-}
+
+
 
 export default function PostsGrid({ items, isReels = false }: PostsGridProps) {
-  if (items.length === 0) {
+  const router = useRouter()
+  if (!items || items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 md:py-20">
         <div className="text-center">
@@ -26,25 +26,30 @@ export default function PostsGrid({ items, isReels = false }: PostsGridProps) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-2">
-      {items.map((item) => (
+      {items?.map((item) => (
         <div key={item.id} className="relative aspect-square bg-[#262626] overflow-hidden group">
-          {item.type === 'post' ? (
+          {item.media_type === 'image' ? (
             <Image
-              src={item.url}
+            onClick={()=> router.push(`profile/post/${item.id}`) }
+              src={item.media_url}
               alt="Post"
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="cursor-pointer object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 33vw"
             />
           ) : (
             <>
               <video
-                src={item.url}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              onClick={()=> router.push(`profile/post/${item.id}`) }
+                src={item.media_url}
+                autoPlay
+                muted
+                playsInline
+                controls
+                loop
+                className="w-full cursor-pointer h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200">
-                <Play className="w-10 h-10 text-white fill-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-              </div>
+            
             </>
           )}
         </div>
