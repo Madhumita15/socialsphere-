@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { UserPlus } from "lucide-react";
+import { Edit2, UserPlus } from "lucide-react";
 import ProfileDialog from "./ProfileDialog";
 
 interface ProfileHeaderProps {
@@ -87,9 +87,9 @@ export default function ProfileHeader({
                       setOpen(true);
                       setIsEdit(true);
                     }}
-                    className=" bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black w-full md:w-auto font-bold px-12"
+                    className=" bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black w-full md:w-auto font-bold cursor-pointer"
                   >
-                    Edit Profile
+                    <Edit2 />
                   </Button>
                 ) : (
                   <Button

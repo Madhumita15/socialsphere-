@@ -14,12 +14,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
 
 const UserSidebar = () => {
   const pathname = usePathname();
+  const router = useRouter()
   const { logoutUser, user } = useAuthStore();
   const sidebarMenu = [
     { path: "/user/home", name: "Home", icon: LayoutDashboard },
@@ -47,7 +48,7 @@ const UserSidebar = () => {
     <div>
       <div className=" flex-col pt-12 fixed left-0 top-0 hidden md:block">
         <div className="pr-8 pl-8" style={{ width: "240px", height: "51px" }}>
-          <h1 className="font-extrabold font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent">
+          <h1 onClick={()=> router.push("/user/home")} className="font-extrabold cursor-pointer font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent">
             SocialSphere+
           </h1>
           <p className="text-[10px] tracking-[2px] leading-3.75 font-normal text-[#71717A]">

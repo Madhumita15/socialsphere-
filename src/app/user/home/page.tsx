@@ -1,7 +1,30 @@
 "use client";
 import FeedCard from "@/components/FeedCard";
-import { Plus } from "lucide-react";
+import { useInifinityPost } from "@/hooks/usePost";
+import { Loader2, Plus } from "lucide-react";
+import { useEffect } from "react";
+import { formatDistanceToNow } from 'date-fns';
 export default function Home() {
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useInifinityPost();
+  const posts = data?.pages.flatMap((page) => page.getScrollData) || [];
+  console.log("posts", posts)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 100;
+
+      if (bottom && hasNextPage) {
+        fetchNextPage();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [fetchNextPage, hasNextPage]);
+
   interface Story {
     id: number;
     username: string;
@@ -10,18 +33,6 @@ export default function Home() {
     hasStory: boolean;
   }
 
-  interface Post {
-    id: number;
-    authorName: string;
-    authorInitials: string;
-    location: string;
-    timeAgo: string;
-    mediaUrl: string;
-    mediaType: "image" | "video";
-    likes: number;
-    comments: number;
-    description: string;
-  }
   const stories: Story[] = [
     {
       id: 1,
@@ -67,91 +78,6 @@ export default function Home() {
     },
   ];
 
-   const posts: Post[] = [
-    {
-      id: 1,
-      authorName: "Sarah Creative",
-      authorInitials: "SC",
-      location: "New York, NY",
-      timeAgo: "2h ago",
-      mediaUrl: "/images/image1.png",
-      mediaType: "image",
-      likes: 2543,
-      comments: 342,
-      description:
-        "Just launched my new design collection! 🎨✨ So excited to share this with everyone",
-    },
-    {
-      id: 2,
-      authorName: "John Photography",
-      authorInitials: "JP",
-      location: "California, USA",
-      timeAgo: "4h ago",
-      mediaUrl:
-        "https://www.pexels.com/download/video/28769580/",
-      mediaType: "video",
-      likes: 1876,
-      comments: 256,
-      description:
-        "Golden hour magic 🌅 Nothing beats nature&apos;s beauty at sunset",
-    },
-    {
-      id: 3,
-      authorName: "Emma Travel",
-      authorInitials: "ET",
-      location: "Bali, Indonesia",
-      timeAgo: "6h ago",
-      mediaUrl:
-        "/images/image1.png",
-      mediaType: "image",
-      likes: 3421,
-      comments: 512,
-      description:
-        "Paradise found! 🏝️ The beaches here are absolutely breathtaking",
-    },
-    {
-      id: 4,
-      authorName: "Alex Designer",
-      authorInitials: "AD",
-      location: "London, UK",
-      timeAgo: "8h ago",
-      mediaUrl:
-        "https://www.pexels.com/download/video/8449545/",
-      mediaType: "video",
-      likes: 2156,
-      comments: 389,
-      description:
-        "New branding project complete! Really proud of how this turned out 💫",
-    },
-    {
-      id: 5,
-      authorName: "Mike Innovation",
-      authorInitials: "MI",
-      location: "San Francisco, CA",
-      timeAgo: "10h ago",
-      mediaUrl:
-        "/images/image1.png",
-      mediaType: "image",
-      likes: 1923,
-      comments: 267,
-      description:
-        "Working on something revolutionary... stay tuned! 🚀 #TechLife",
-    },
-    {
-      id: 6,
-      authorName: "Lisa Wellness",
-      authorInitials: "LW",
-      location: "Miami, FL",
-      timeAgo: "12h ago",
-      mediaUrl:
-        "https://www.pexels.com/download/video/4671951/",
-      mediaType: "video",
-      likes: 2789,
-      comments: 445,
-      description:
-        "Morning vibes 🌞 Starting the day right with a beach workout",
-    },
-  ];
   return (
     <>
       <div className="bg-[#121111] border-b border-[#262626] px-4 py-4 overflow-x-auto overflow-y-hidden scrollbar-hide w-full touch-pan-y">
@@ -187,22 +113,34 @@ export default function Home() {
         </div>
       </div>
 
-     <div className="flex flex-col items-center w-full max-w-2xl mx-auto mt-11">
-        {posts.map((post) => (
-          <FeedCard
-            key={post.id}
-            id={post.id}
-            authorName={post.authorName}
-            authorInitials={post.authorInitials}
-            location={post.location}
-            timeAgo={post.timeAgo}
-            mediaUrl={post.mediaUrl}
-            mediaType={post.mediaType}
-            likes={post.likes}
-            comments={post.comments}
-            description={post.description}
-          />
-        ))}
+      <div className="flex flex-col items-center w-full max-w-2xl mx-auto mt-11">
+        {posts.map((post) => {
+          const name = post.author?.username || "Anonymous";
+          return (
+            <FeedCard
+              key={post.id}
+              id={post.id}
+              authorName={name}
+              authorInitials={post.author.avatar_url}
+              location={post.location}
+              timeAgo={formatDistanceToNow(new Date(post.created_at), {addSuffix: true}) }
+              mediaUrl={post.media_url}
+              mediaType={post.media_type}
+              likes={post.like_count}
+              // comments={post.comments}
+              description={post.caption}
+            />
+          );
+        })}
+      </div>
+
+      <div className="flex justify-center py-8">
+        {isFetchingNextPage ? (
+          <Loader2 className="animate-spin w-10 h-10 text-zinc-500" />
+          
+        ) : !hasNextPage && posts.length > 0 ? (
+          <p className="text-zinc-500 text-sm">No more posts to show</p>
+        ) : null}
       </div>
     </>
   );

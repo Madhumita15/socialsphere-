@@ -11,7 +11,7 @@ interface FeedCardProps {
   mediaUrl: string;
   mediaType: "image" | "video";
   likes: number;
-  comments: number;
+  // comments: number;
   description: string;
 }
 
@@ -22,9 +22,8 @@ const FeedCard: React.FC<FeedCardProps> = ({
   mediaUrl,
   mediaType,
   likes,
-  comments,
   description,
-  authorName
+  authorName,
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -41,10 +40,15 @@ const FeedCard: React.FC<FeedCardProps> = ({
         {/* Post Header */}
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            {/* Author Avatar */}
-            <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#D493FF] to-[#FF7354] p-0.5 shrink-0">
-              <div className="w-full h-full rounded-full bg-[#1a1a1a] flex items-center justify-center text-white text-xs font-bold">
-                {authorInitials}
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#D493FF] to-[#FF7354] p-[2px]">
+              <div className="relative h-full w-full overflow-hidden rounded-full bg-gray-800">
+                <Image
+                  src={authorInitials}
+                  alt="author profile"
+                  fill
+                  className="object-cover"
+                  sizes="40px"
+                />
               </div>
             </div>
 
@@ -60,42 +64,39 @@ const FeedCard: React.FC<FeedCardProps> = ({
           </div>
 
           {/* More Options */}
-          <button className="text-[#71717A] hover:text-white transition-colors">
+          {/* <button className="text-[#71717A] hover:text-white transition-colors">
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 6a2 2 0 11-4 0 2 2 0 014 0zM10 12a2 2 0 11-4 0 2 2 0 014 0zM10 18a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-          </button>
+          </button> */}
         </div>
 
         {/* Post Image/Video */}
-      <div className="relative w-full aspect-square bg-[#262626] overflow-hidden group">
-        {mediaType === "image" ? (
-          <Image
-            src={mediaUrl}
-            alt="Post content"
-            fill
-            className="object-cover"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 500px"
-            priority={false}
-          />
-        ) : (
-          <>
-            <video
-            src={mediaUrl}
-            className="w-full h-full object-cover"
-            controls={false}
-            muted
-            loop
-            autoPlay
-            playsInline
-          />
-            {/* Play Button Overlay */}
-            {/* <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200">
-              <Play className="w-16 h-16 text-white fill-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-            </div> */}
-          </>
-        )}
-      </div>
+        <div className="relative w-full aspect-square bg-[#262626] overflow-hidden group">
+          {mediaType === "image" ? (
+            <Image
+              src={mediaUrl}
+              alt="Post content"
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 500px"
+              priority={false}
+            />
+          ) : (
+            <>
+              <video
+                src={mediaUrl}
+                className="w-full h-full object-cover"
+                controls={false}
+                muted
+                loop
+                autoPlay
+                playsInline
+              />
+             
+            </>
+          )}
+        </div>
 
         {/* Engagement Buttons */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#262626]">
@@ -156,9 +157,9 @@ const FeedCard: React.FC<FeedCardProps> = ({
           </div>
 
           {/* Comments Count */}
-          <button className="text-[#71717A] text-xs hover:text-[#A1A1AA] transition-colors">
+          {/* <button className="text-[#71717A] text-xs hover:text-[#A1A1AA] transition-colors">
             View all {comments} comments
-          </button>
+          </button> */}
         </div>
       </div>
     </>

@@ -1,111 +1,9 @@
-// "use client";
-
-
-// import PostDialog from "@/components/profile/PostDialog";
-// import { Button } from "@/components/ui/button";
-// import { useDeletePost, useGetPostById } from "@/hooks/usePost";
-// import {  Edit2, Trash } from "lucide-react";
-// import Image from "next/image";
-// import { useParams, useRouter } from "next/navigation";
-// import { useState } from "react";
-// import loadingAnimation from '@/services/json/lottie/Loading animation.json'
-// import Lottie from "lottie-react";
-
-
-// const SinglePost = () => {
-//   const [open, setOpen] = useState(false)
-//   const params = useParams();
-//   const router = useRouter();
-//   const id = params?.id as string;
-//   const { data, isLoading, isError, error } = useGetPostById(id as string);
-//   const {mutate:deleteMutate, isError:deleteError} = useDeletePost()
-  
-//   if (isLoading) {
-//     return (
-//        <div className="flex justify-center items-center pt-36">
-//         <Lottie width={70} height={70}  loop animationData={loadingAnimation}/>
-//       </div>
-//     );
-//   }
-//   const item = data?.getPostData;
-//   return (
-//     <>
-     
-//       <div className="flex flex-col gap-3 bg-[#262626]">
-//          {isError && <p className="text-red-200 font-bold text-xl">{error?.message}</p>}
-//       {deleteError && <p className="text-red-200 font-bold text-xl">{deleteError}</p>}
-//         <Button className={"w-12.5"} variant={"ghost"} onClick={() => router.back()}>
-//           Back
-//         </Button>
-//         {item && (
-//           <div
-//             key={item.id}
-//             className=" aspect-square  overflow-hidden group"
-//           >
-//             {item.media_type === "image" ? (
-//               <Image
-//                 src={item.media_url}
-//                 alt="Post"
-//                 width={100}
-//                 height={100}
-//                 className="cursor-pointer object-cover group-hover:scale-105 transition-transform duration-300"
-//                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 33vw"
-//               />
-//             ) : (
-//               <>
-//                 <video
-//                   src={item.media_url}
-//                   autoPlay
-//                   muted
-//                   playsInline
-//                   loop
-//                   className="w-32 cursor-pointer h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-//                 />
-//               </>
-//             )}
-//             <h1>{item.hashtags?.map((tag: string) => `#${tag}`).join(" ")}</h1>
-//             <p>{item.caption}</p>
-//             <p>{item.location}</p>
-//             <p className="text-xs text-[#71717A]">
-//               Posted on {new Date(item.created_at).toLocaleString()}
-//             </p>
-
-//             {item.created_at !== item.updated_at && (
-//               <p className="text-xs text-[#71717A]">
-//                 updated on {new Date(item.updated_at).toLocaleString()}
-//               </p>
-//             )}
-//             <div>
-//               <Button variant={"ghost"}  onClick={()=> setOpen(true)}>
-//                 <Edit2 />
-//               </Button>
-//               <PostDialog mode="post" action="edit" open={open} setOpen={setOpen} initialdata={data?.getPostData} />
-//               <Button variant={"ghost"} onClick={()=> {
-//                const confirmMessage =  window.confirm("Are you sure, you want to delete?")
-//                if(!confirmMessage) return
-//                deleteMutate(item.id)
-              
-//               }}>
-//                 <Trash />
-//               </Button>
-//             </div>
-//           </div>
-//         )}
-//       </div>
-//     </>
-//   );
-// };
-
-// export default SinglePost;
-
-
 
 "use client";
 
 import PostDialog from "@/components/profile/PostDialog";
-import { Button } from "@/components/ui/button";
 import { useDeletePost, useGetPostById } from "@/hooks/usePost";
-import { Edit2, Trash, ArrowLeft, MapPin, Heart } from "lucide-react";
+import { Edit2, Trash, ArrowLeft, MapPin } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -168,7 +66,7 @@ const SinglePost = () => {
         <div className="max-w-6xl mx-auto px-4 py-6  md:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Media Container */}
-            <div className="lg:col-span-2 flex items-center justify-center bg-gradient-to-br from-gray-900 to-black rounded-xl overflow-hidden group border border-gray-800 aspect-square lg:aspect-auto lg:h-[600px]">
+            <div className="lg:col-span-2 flex items-center justify-center bg-linear-to-br from-gray-900 to-black rounded-xl overflow-hidden group border border-gray-800 aspect-square lg:aspect-auto lg:h-[600px]">
               {item.media_type === "image" ? (
                 <div className="relative w-full h-full">
                   <Image
@@ -223,7 +121,7 @@ const SinglePost = () => {
               {/* Location */}
               {item.location && (
                 <div className="flex items-start gap-3 p-3 bg-gray-900/50 rounded-lg border border-gray-800">
-                  <MapPin className="w-5 h-5 text-[#D493FF] flex-shrink-0 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-[#D493FF] shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">
                       Location
@@ -263,13 +161,13 @@ const SinglePost = () => {
               </div>
 
               {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
+              <div className="h-px bg-linear-to-r from-transparent via-gray-700 to-transparent" />
 
               {/* Action Buttons */}
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setOpen(true)}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-[#FF7354] to-orange-500 hover:from-[#FF7354] hover:to-orange-400 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-[#FF7354]/30 active:scale-95"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-linear-to-r from-[#FF7354] to-orange-500 hover:from-[#FF7354] hover:to-orange-400 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-[#FF7354]/30 active:scale-95"
                 >
                   <Edit2 className="w-4 h-4" />
                   <span className="hidden sm:inline">Edit</span>

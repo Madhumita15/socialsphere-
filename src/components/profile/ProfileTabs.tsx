@@ -9,17 +9,19 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import Lottie from "lottie-react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 
 export default function ProfileTabs() {
   const { data, isError, isLoading, error } = useGetPost();
+  const {user} = useAuthStore()
   const [open, setOpen] = useState(false);
 
   const postOnly = data?.getPostData?.filter(
-    (post) => post.media_type === "image",
+    (post) => post.media_type === "image" && post.user_id === user?.auth_user_id,
   );
   const reelsOnly = data?.getPostData?.filter(
-    (post) => post.media_type === "video",
+    (post) => post.media_type === "video" && post.user_id === user?.auth_user_id,
   );
 
   if (isLoading) {
@@ -58,11 +60,11 @@ export default function ProfileTabs() {
           <div className="text-center pt-20 pb-20 ">
             <Button
               className={
-                "rounded-[12px] bg-linear-to-r from-[#D493FF] to-[#FF7354] hover:to-[#FF7354] hover:from-[#D493FF] text-black w-50 h-10 font-bold text-[20px] tracking-[-0.4px] leading-6 "
+                "rounded-[12px] bg-linear-to-r from-[#D493FF] to-[#FF7354] hover:to-[#FF7354] hover:from-[#D493FF] text-black w-30 h-10 font-bold text-[20px] tracking-[-0.4px] leading-6 "
               }
               onClick={() => setOpen(true)}
             >
-              create <Plus className="font-bold size-7" />
+              create <Plus className="font-bold size-5" />
             </Button>
           </div>
           <div className="flex justify-center items-center">

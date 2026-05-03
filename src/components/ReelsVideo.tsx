@@ -2,22 +2,27 @@
 
 import { Heart, MessageCircle, Share2, Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 interface ReelsVideoProps {
   id: string
   username: string
   caption: string
   likes: number
-  comments: number
-  videoSrc?: string
+  // comments: number
+  videoSrc: string
+  authorName: string
+  avatar_url: string
 }
 
 export function ReelsVideo({
   username,
   caption,
   likes,
-  comments,
-  videoSrc = 'https://www.pexels.com/download/video/28769580/',
+  // comments,
+  authorName,
+  avatar_url,
+  videoSrc,
 }: ReelsVideoProps) {
   return (
     <div className="relative h-screen w-full snap-start overflow-hidden bg-black">
@@ -42,6 +47,26 @@ export function ReelsVideo({
 
       {/* Bottom-Left: Username & Caption Overlay */}
       <div className="absolute bottom-24 left-0 z-10 p-4 max-w-xs sm:bottom-20">
+        <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#D493FF] to-[#FF7354] p-[2px]">
+                      <div className="relative h-full w-full overflow-hidden rounded-full bg-gray-800">
+                        <Image
+                          src={avatar_url}
+                          alt="author profile"
+                          fill
+                          className="object-cover"
+                          sizes="40px"
+                        />
+                      </div>
+                    </div>
+        
+                    {/* Author Info */}
+                    <div className="flex flex-col">
+                      <p className="text-white font-semibold text-sm leading-none">
+                        {authorName}
+                      </p>
+                    </div>
+                  </div>
         <p className="text-white font-semibold text-xs sm:text-sm">{username}</p>
         <p className="text-white text-xs sm:text-sm line-clamp-2 mt-1 opacity-90">
           {caption}
@@ -71,7 +96,7 @@ export function ReelsVideo({
           >
             <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-white" />
           </Button>
-          <span className="text-white text-xs sm:text-sm font-semibold">{comments}</span>
+          {/* <span className="text-white text-xs sm:text-sm font-semibold">{comments}</span> */}
         </div>
 
         {/* Share Button */}

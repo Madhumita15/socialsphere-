@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -21,15 +21,23 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
-import { ProfileDialogPropsType, ProfileFormType } from "@/typescript/type/auth.type";
+import {
+  ProfileDialogPropsType,
+  ProfileFormType,
+} from "@/typescript/type/auth.type";
 import { profileDialogSchema } from "@/services/validation/auth.validation";
 
-
-const ProfileDialog: React.FC<ProfileDialogPropsType> = ({ setOpen, open, isEdit, setIsEdit }) => {
+const ProfileDialog: React.FC<ProfileDialogPropsType> = ({
+  setOpen,
+  open,
+  isEdit,
+  setIsEdit,
+}) => {
   const [preview, setPreview] = useState("");
   const { user, editUserProfile, loading, error } = useAuthStore();
   const imageSrc =
-  preview || (user?.avatar_url && user.avatar_url !== "" ? user.avatar_url : null);
+    preview ||
+    (user?.avatar_url && user.avatar_url !== "" ? user.avatar_url : null);
 
   const {
     register,
@@ -50,21 +58,17 @@ const ProfileDialog: React.FC<ProfileDialogPropsType> = ({ setOpen, open, isEdit
   const onSubmit = async (data: ProfileFormType) => {
     // console.log("data", data);
     try {
-      if(isEdit){
-      const response = await editUserProfile(data)
-      if(response.success === true){
-        toast.success(response.message)
-        setOpen(false)
-        setIsEdit(false)
-        
+      if (isEdit) {
+        const response = await editUserProfile(data);
+        if (response.success === true) {
+          toast.success(response.message);
+          setOpen(false);
+          setIsEdit(false);
+        }
       }
-    }
-      
     } catch (error) {
-     console.log(error)
-      
+      console.log(error);
     }
-    
   };
 
   useEffect(() => {
@@ -84,7 +88,7 @@ const ProfileDialog: React.FC<ProfileDialogPropsType> = ({ setOpen, open, isEdit
         open={open}
         onOpenChange={() => {
           setOpen(false);
-          setPreview("")
+          setPreview("");
           reset({
             fullname: "",
             username: "",
@@ -162,26 +166,23 @@ const ProfileDialog: React.FC<ProfileDialogPropsType> = ({ setOpen, open, isEdit
 
             {/* Action Buttons */}
             <DialogFooter className="flex gap-3 pt-4 bg-slate-900 border-t border-gray-900">
-              <DialogClose>
-                <Button
-                  variant="outline"
-                  className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white"
-                >
-                  Cancel
-                </Button>
+              <DialogClose className="inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors bg-gray-800 border border-gray-700 text-white hover:bg-gray-700 hover:text-white focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50">
+                Cancel
               </DialogClose>
+
               <Button
                 type="submit"
                 disabled={loading}
                 className="bg-linear-to-r from-[#3a170c] to-orange-500 hover:from-[#FF7354] hover:to-orange-950 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                
                 {loading ? (
                   <>
                     <Spinner className="w-4 h-4 mr-2" />
                     Processing...
                   </>
-                ) : `Edit`}
+                ) : (
+                  `Edit`
+                )}
               </Button>
             </DialogFooter>
           </form>

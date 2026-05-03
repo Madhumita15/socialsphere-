@@ -7,10 +7,10 @@ interface PostCardProps {
   id: string;
   type: "image" | "video";
   src: string;
-  views: number;
+ 
 }
 
-export function PostCard({ type, src, views }: PostCardProps) {
+export function PostCard({ type, src }: PostCardProps) {
   return (
     <div className="relative  aspect-square bg-black rounded-lg overflow-hidden group cursor-pointer">
       {/* Post Content */}
@@ -40,9 +40,7 @@ export function PostCard({ type, src, views }: PostCardProps) {
       {/* Views Count - Bottom Right */}
       <div className="absolute bottom-0 right-0 flex items-center gap-1 p-2 sm:p-3 bg-linear-to-l from-black via-black/60 to-transparent">
         <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-        <span className="text-white text-xs sm:text-sm font-semibold">
-          {views > 1000 ? `${(views / 1000).toFixed(1)}K` : views}
-        </span>
+        
       </div>
 
       {/* Video Badge */}

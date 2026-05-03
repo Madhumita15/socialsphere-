@@ -5,11 +5,17 @@ import {
   deletePost,
   getAllPost,
   getPostById,
+  infinityPost,
   updatePost,
 } from "@/services/helper/apiFunction/post.function";
 import { useAuthStore } from "@/store/useAuthStore";
 import { PostFormType } from "@/typescript/type/post.type";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -25,6 +31,31 @@ export const useGetPostById = (id: string) => {
     queryKey: ["getpostbyid", id],
     queryFn: () => getPostById(id),
     enabled: !!id,
+  });
+};
+
+export const useInifinityPost = (
+  media_type?: "video" | "image",
+  loop?: boolean,
+) => {
+  return useInfiniteQuery({
+    queryKey: ["inifinitypost", media_type],
+    queryFn: ({ pageParam = 1, signal }) =>
+      infinityPost({ pageParam, signal, media_type }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const lastPageData = lastPage?.getScrollData || [];
+      if (loop) {
+        // If the last page was empty or small, we've run out of new stuff
+        if (lastPageData.length < 8) {
+          return 1; // 💡 RESTART: Send the user back to page 1
+        }
+        return allPages.length + 1;
+      } else {
+        if (lastPageData.length === 0) return undefined;
+        return lastPageData.length === 8 ? allPages.length + 1 : undefined;
+      }
+    },
   });
 };
 
@@ -88,9 +119,6 @@ export const useDeletePost = () => {
         queryClient.invalidateQueries({
           queryKey: ["getpost"],
         });
-        // queryClient.invalidateQueries({
-        //   queryKey: ["getpostbyid"],
-        // });
         toast.success(res.message);
         router.back();
       }

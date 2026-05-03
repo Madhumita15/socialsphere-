@@ -25,7 +25,7 @@ export default function PostsGrid({ items, isReels = false }: PostsGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-2">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
       {items?.map((item) => (
         <div key={item.id} className="relative aspect-square bg-[#262626] overflow-hidden group">
           {item.media_type === 'image' ? (
@@ -33,6 +33,7 @@ export default function PostsGrid({ items, isReels = false }: PostsGridProps) {
             onClick={()=> router.push(`profile/post/${item.id}`) }
               src={item.media_url}
               alt="Post"
+              // priority
               fill
               className="cursor-pointer object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 33vw"
@@ -45,7 +46,6 @@ export default function PostsGrid({ items, isReels = false }: PostsGridProps) {
                 autoPlay
                 muted
                 playsInline
-                controls
                 loop
                 className="w-full cursor-pointer h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />

@@ -3,10 +3,11 @@
 import { Input } from "@/components/ui/input";
 import { Bell, Search } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const UserNavbar = () => {
   const pathname = usePathname();
+  const router = useRouter()
 
   const navbarmenu = [
     { path: "/featured", name: "Featured" },
@@ -48,7 +49,7 @@ const UserNavbar = () => {
       <div className="fixed top-0 left-0 right-0 bg-[#121111] border-b border-[#262626] md:hidden z-50">
         <div className="flex items-center justify-between px-4 py-3">
           {/* Logo */}
-          <h1 className="font-extrabold font-serif text-base bg-linear-to-r from-[#D493FF] to-[#FF7354] bg-clip-text text-transparent">
+          <h1 onClick={()=> router.push("/user/home")} className="font-extrabold cursor-pointer font-serif text-base bg-linear-to-r from-[#D493FF] to-[#FF7354] bg-clip-text text-transparent">
             SocialSphere+
           </h1>
 
