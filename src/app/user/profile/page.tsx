@@ -2,10 +2,16 @@
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileTabs from "@/components/profile/ProfileTabs";
+import { useProfile } from "@/hooks/useFollow";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const Profile = () => {
   const { user } = useAuthStore();
+  // console.log(user)
+  const {data:profileData} = useProfile(user?.auth_user_id)
+  console.log("profiledata", profileData)
+  
+  
 
   return (
     <>
@@ -13,11 +19,13 @@ const Profile = () => {
         <ProfileHeader
           name={user?.fullname || ""}
           bio={user?.bio || ""}
-          postsCount={428}
-          followersCount={12400}
-          followingCount={842}
+          postsCount={user?.post_count}
+          followersCount={profileData?.followers_count}
+          followingCount={profileData?.following_count}
           profileImage={user?.avatar_url || ""}
           isOwnProfile={true}
+          userId={profileData?.auth_user_id}
+          isFollowing={false}
         />
         <ProfileTabs />
       </main>

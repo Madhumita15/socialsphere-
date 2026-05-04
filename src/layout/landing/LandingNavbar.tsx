@@ -36,14 +36,14 @@ function useIsClinet (){
           {isClient &&
             (token ? (
               <button
-                className="text-gray-400 hover:text-[#D493FF] transition-colors"
+                className="text-gray-400 cursor-pointer hover:text-[#D493FF] transition-colors"
                 onClick={() => logoutUser()}
               >
                 Logout
               </button>
             ) : (
               <button
-                className="text-gray-400 hover:text-[#D493FF] transition-colors"
+                className="text-gray-400 hover:text-[#D493FF] cursor-pointer transition-colors"
                 onClick={() => router.push("/login")}
               >
                 Login
@@ -51,7 +51,7 @@ function useIsClinet (){
             ))}
 
           <button
-            className="px-6 py-2.5 rounded-xl bg-linear-to-r from-[#D493FF] to-[#FF7354] font-bold text-black hover:shadow-[0_0_20px_rgba(212,147,255,0.4)] transition-all active:scale-95"
+            className="px-6 py-2.5 cursor-pointer rounded-xl bg-linear-to-r from-[#D493FF] to-[#FF7354] font-bold text-black hover:shadow-[0_0_20px_rgba(212,147,255,0.4)] transition-all active:scale-95"
             onClick={() => {
               if (!token) {
                 router.push("/login");
@@ -65,7 +65,7 @@ function useIsClinet (){
         </div>
 
         <button
-          className="md:hidden"
+          className="md:hidden cursor-pointer"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X /> : <Menu />}
@@ -77,7 +77,7 @@ function useIsClinet (){
             <ul className="flex flex-col gap-4 p-6 bg-[#0D0D0D]/95 backdrop-blur-xl border-b border-white/10 shadow-2xl animate-in slide-in-from-top-5">
               <li>
                 <button
-                  className="w-full border-2 text-left py-3 px-4 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all"
+                  className="w-full cursor-pointer border-2 text-left py-3 px-4 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all"
                   onClick={() => {
                     router.push("/login");
                     setIsMenuOpen(false);
@@ -88,7 +88,7 @@ function useIsClinet (){
               </li>
               <li>
                 <button
-                  className="w-full py-4 rounded-xl bg-linear-to-r from-[#D493FF] to-[#FF7354] font-bold text-black active:scale-95 transition-transform shadow-[0_0_15px_rgba(212,147,255,0.3)]"
+                  className="w-full cursor-pointer py-4 rounded-xl bg-linear-to-r from-[#D493FF] to-[#FF7354] font-bold text-black active:scale-95 transition-transform shadow-[0_0_15px_rgba(212,147,255,0.3)]"
                   onClick={() => {
                     if (!token) {
                       router.push("/register");

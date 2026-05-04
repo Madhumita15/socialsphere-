@@ -32,6 +32,9 @@ export type ProfileType = {
   phone: string;
   role: string;
   username: string;
+  post_count: number
+  following_count: number
+  followers_count: number
 };
 
 export type LoginResponse =
@@ -87,6 +90,7 @@ export type AuthStore = {
   setAuth: (data: AuthType)=> void 
   logoutUser: () => void;
   editUserProfile: (data: ProfileFormType)=> Promise<ProfileResponse>
+  refreshUser: ()=> void
 
 };
 

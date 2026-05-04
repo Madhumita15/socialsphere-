@@ -39,19 +39,19 @@ export default function ProfileTabs() {
           <TabsList className="bg-[#262626] border-b border-[#262626] p-0 h-auto w-full flex justify-start md:justify-center">
             <TabsTrigger
               value="posts"
-              className="bg-transparent border-b-2 border-transparent data-[state=active]:border-[#D493FF] data-[state=active]:bg-transparent text-[#A1A1AA] data-[state=active]:text-white rounded-none px-4 md:px-6 py-4 font-semibold text-sm md:text-base"
+              className="cursor-pointer bg-transparent border-b-2 border-transparent data-[state=active]:border-[#D493FF] data-[state=active]:bg-transparent text-[#A1A1AA] data-[state=active]:text-white rounded-none px-4 md:px-6 py-4 font-semibold text-sm md:text-base"
             >
               Posts
             </TabsTrigger>
             <TabsTrigger
               value="reels"
-              className="bg-transparent border-b-2 border-transparent data-[state=active]:border-[#D493FF] data-[state=active]:bg-transparent text-[#A1A1AA] data-[state=active]:text-white rounded-none px-4 md:px-6 py-4 font-semibold text-sm md:text-base"
+              className="cursor-pointer bg-transparent border-b-2 border-transparent data-[state=active]:border-[#D493FF] data-[state=active]:bg-transparent text-[#A1A1AA] data-[state=active]:text-white rounded-none px-4 md:px-6 py-4 font-semibold text-sm md:text-base"
             >
               Reels
             </TabsTrigger>
             <TabsTrigger
               value="saved"
-              className="bg-transparent border-b-2 border-transparent data-[state=active]:border-[#D493FF] data-[state=active]:bg-transparent text-[#A1A1AA] data-[state=active]:text-white rounded-none px-4 md:px-6 py-4 font-semibold text-sm md:text-base"
+              className="cursor-pointer bg-transparent border-b-2 border-transparent data-[state=active]:border-[#D493FF] data-[state=active]:bg-transparent text-[#A1A1AA] data-[state=active]:text-white rounded-none px-4 md:px-6 py-4 font-semibold text-sm md:text-base"
             >
               Saved
             </TabsTrigger>
@@ -60,7 +60,7 @@ export default function ProfileTabs() {
           <div className="text-center pt-20 pb-20 ">
             <Button
               className={
-                "rounded-[12px] bg-linear-to-r from-[#D493FF] to-[#FF7354] hover:to-[#FF7354] hover:from-[#D493FF] text-black w-30 h-10 font-bold text-[20px] tracking-[-0.4px] leading-6 "
+                "rounded-[12px] cursor-pointer bg-linear-to-r from-[#D493FF] to-[#FF7354] hover:to-[#FF7354] hover:from-[#D493FF] text-black w-30 h-10 font-bold text-[20px] tracking-[-0.4px] leading-6 "
               }
               onClick={() => setOpen(true)}
             >

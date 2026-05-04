@@ -9,11 +9,13 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import loadingAnimation from "@/services/json/lottie/Loading animation.json";
 import Lottie from "lottie-react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const SinglePost = () => {
   const [open, setOpen] = useState(false);
   const params = useParams();
   const router = useRouter();
+  const {user} = useAuthStore()
   const id = params?.id as string;
   const { data, isLoading, isError, error } = useGetPostById(id as string);
   const { mutate: deleteMutate, isError: deleteError } = useDeletePost();
@@ -167,10 +169,10 @@ const SinglePost = () => {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setOpen(true)}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-linear-to-r from-[#FF7354] to-orange-500 hover:from-[#FF7354] hover:to-orange-400 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-[#FF7354]/30 active:scale-95"
+                  className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-3 bg-linear-to-r from-[#FF7354] to-orange-500 hover:from-[#FF7354] hover:to-orange-400 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-[#FF7354]/30 active:scale-95"
                 >
                   <Edit2 className="w-4 h-4" />
-                  <span className="hidden sm:inline">Edit</span>
+                  <span className="hidden sm:inline ">Edit</span>
                 </button>
                 <button
                   onClick={() => {
@@ -180,7 +182,7 @@ const SinglePost = () => {
                     if (!confirmMessage) return;
                     deleteMutate(item.id);
                   }}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-red-900/30 hover:bg-red-900/50 text-red-300 hover:text-red-200 border border-red-700/50 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-red-900/30 active:scale-95"
+                  className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-3 bg-red-900/30 hover:bg-red-900/50 text-red-300 hover:text-red-200 border border-red-700/50 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-red-900/30 active:scale-95"
                 >
                   <Trash className="w-4 h-4" />
                   <span className="hidden sm:inline">Delete</span>

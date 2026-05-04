@@ -108,11 +108,18 @@ export const useUpdatePost = () => {
 };
 
 export const useDeletePost = () => {
+  const { user } = useAuthStore();
   const router = useRouter();
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ["deletepost"],
-    mutationFn: (id: string) => deletePost(id),
+    mutationFn: (id: string) => {
+      if (!user) {
+        throw new Error("You must be logged in to delete a post");
+      }
+      return deletePost(id, user);
+    },
     onSuccess: (res) => {
       console.log(res);
       if (res.success === true) {

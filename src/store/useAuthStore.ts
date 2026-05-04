@@ -127,7 +127,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-
   userProfile: async ({ bio, image }) => {
     set({ loading: true, error: null });
     try {
@@ -197,13 +196,36 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
+  refreshUser: async () => {
+    const currentUser = get().user;
+    if (!currentUser) return;
 
-  editUserProfile: async (data:ProfileFormType) => {
+    try {
+      const { data: latestProfile, error } = await supabase
+        .from("profile")
+        .select("*")
+        .eq("auth_user_id", currentUser.auth_user_id)
+        .single();
+
+      if (error) throw error;
+
+      if (latestProfile) {
+        set({ user: latestProfile });
+        setCookie("user", JSON.stringify(latestProfile), {
+          maxAge: 60 * 60 * 14 * 7,
+        });
+      }
+    } catch (err) {
+      console.error("Error refreshing profile:", err);
+    }
+  },
+
+  editUserProfile: async (data: ProfileFormType) => {
     set({ loading: true, error: null });
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData) throw "User Not found";
-      const id = userData.user?.id
+      const id = userData.user?.id;
       const currentUser = get().user;
 
       let imageurl = currentUser?.avatar_url;
@@ -228,7 +250,13 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         }
       }
 
-      const updatePayload: {fullname: string, username: string, bio: string, phone: string, avatar_url?: string} = {
+      const updatePayload: {
+        fullname: string;
+        username: string;
+        bio: string;
+        phone: string;
+        avatar_url?: string;
+      } = {
         fullname: data.fullname,
         username: data.username,
         bio: data.bio,

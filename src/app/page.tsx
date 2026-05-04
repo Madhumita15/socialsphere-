@@ -107,7 +107,7 @@ const LandingPage = () => {
           </p>
           <div className="relative z-10 flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              className="px-10 py-4 rounded-xl bg-linear-to-r from-[#D493FF] via-[#FF7354] to-[#EAC96F] text-black font-black text-lg hover:scale-105 transition-transform shadow-xl"
+              className="px-10 cursor-pointer py-4 rounded-xl bg-linear-to-r from-[#D493FF] via-[#FF7354] to-[#EAC96F] text-black font-black text-lg hover:scale-105 transition-transform shadow-xl"
               onClick={() => {
                 if(!token){
                     router.push("/login")
@@ -120,7 +120,7 @@ const LandingPage = () => {
             </button>
             <button
               onClick={scrollToDemo}
-              className="px-10 py-4 rounded-xl border border-white/20 backdrop-blur-sm hover:bg-white/5 transition-all font-bold"
+              className="px-10 cursor-pointer py-4 rounded-xl border border-white/20 backdrop-blur-sm hover:bg-white/5 transition-all font-bold"
             >
               Watch Demo
             </button>

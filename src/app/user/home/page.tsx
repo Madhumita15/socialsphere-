@@ -127,8 +127,9 @@ export default function Home() {
               mediaUrl={post.media_url}
               mediaType={post.media_type}
               likes={post.like_count}
-              // comments={post.comments}
+              comments={post.comment_count}
               description={post.caption}
+              userId={post.user_id}
             />
           );
         })}

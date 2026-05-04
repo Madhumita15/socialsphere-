@@ -11,17 +11,15 @@ import {
 } from "@/components/ui/dialog";
 import { Edit2, UserPlus } from "lucide-react";
 import ProfileDialog from "./ProfileDialog";
-
-interface ProfileHeaderProps {
-  name: string;
-  bio: string;
-  postsCount: number;
-  followersCount: number;
-  followingCount: number;
-  profileImage: string;
-  isOwnProfile?: boolean;
-  isFollowing?: boolean;
-}
+import { ProfileHeaderProps } from "@/typescript/interface/post.interface";
+import {
+  useCreateFollow,
+  useGetFollow,
+  useGetFollowersList,
+  useGetFollowingList,
+  useRemoveFollower,
+} from "@/hooks/useFollow";
+import { ProfileType } from "@/typescript/type/auth.type";
 
 export default function ProfileHeader({
   name,
@@ -32,12 +30,28 @@ export default function ProfileHeader({
   profileImage,
   isOwnProfile = true,
   isFollowing = false,
+  userId,
 }: ProfileHeaderProps) {
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [following, setFollowing] = useState(isFollowing);
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+
+  const { data: followersList } = useGetFollowersList(userId);
+  // console.log("followers data", followersList);
+  const { data: followingList } = useGetFollowingList(userId);
+  // console.log("following data", followingList);
+  const {
+    mutate: mutatefollow,
+    isPending: mutateisPending,
+    variables: unfollowVariables,
+  } = useCreateFollow();
+  const {
+    mutate: mutateRemove,
+    isPending: removeIsPending,
+    variables: removeVariables,
+  } = useRemoveFollower();
 
   function useIsClient() {
     return useSyncExternalStore(
@@ -49,6 +63,7 @@ export default function ProfileHeader({
 
   const isClient = useIsClient();
   if (!isClient) return null;
+  // console.log(postsCount, followersCount, followingCount)
 
   return (
     <>
@@ -87,7 +102,7 @@ export default function ProfileHeader({
                       setOpen(true);
                       setIsEdit(true);
                     }}
-                    className=" bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black w-full md:w-auto font-bold cursor-pointer"
+                    className=" bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black w-20 md:w-auto font-bold cursor-pointer"
                   >
                     <Edit2 />
                   </Button>
@@ -124,7 +139,7 @@ export default function ProfileHeader({
                   onClick={() => setShowFollowers(true)}
                 >
                   <span className="font-bold text-lg md:text-xl text-white">
-                    {followersCount.toLocaleString()}
+                    {followersCount}
                   </span>
                   <span className="text-xs md:text-sm text-[#A1A1AA]">
                     Followers
@@ -162,29 +177,70 @@ export default function ProfileHeader({
           <DialogHeader>
             <DialogTitle className="text-white">Followers</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 max-h-80 overflow-y-auto">
-            {Array.from({ length: followersCount }).map((_, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-3 hover:bg-[#262626] rounded-lg transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#D493FF]/20 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-[#D493FF]">
-                      {i + 1}
-                    </span>
+          <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
+            {followersList?.length !== 0 ? (
+              followersList?.map((follower: ProfileType) => {
+                const isThisUserPending =
+                  removeIsPending && removeVariables === follower.auth_user_id;
+                return (
+                  <div
+                    key={follower.auth_user_id}
+                    className="flex items-center justify-between p-3 hover:bg-[#262626] rounded-lg transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden bg-[#262626] border border-[#D493FF]/20">
+                        {follower.avatar_url ? (
+                          <Image
+                            src={follower.avatar_url}
+                            alt={`${follower.username}'s avatar`}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center w-full h-full text-xs font-bold text-[#D493FF]">
+                            {follower.username?.substring(0, 2).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">
+                          {follower.username}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          {follower.fullname}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      disabled={isThisUserPending}
+                      size="sm"
+                      className="text-black border-[#D493FF]/20 hover:bg-[#D493FF] hover:text-black transition-all"
+                      onClick={() => mutateRemove(follower.auth_user_id)}
+                    >
+                      {
+                        isOwnProfile
+                          ? isThisUserPending
+                            ? "..."
+                            : "Remove"
+                          : follower.auth_user_id === userId
+                            ? "You"
+                            : "Follow" // You'd ideally check actual follow status here
+                      }
+                    </Button>
                   </div>
-                  <span className="text-sm">Follower {i + 1}</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-[#D493FF] hover:bg-[#262626]"
-                >
-                  Remove
-                </Button>
+                );
+              })
+            ) : (
+              <div className="flex flex-col gap-1 items-center justify-center pt-3 pb-4">
+                <h4>No Followers</h4>
+                <p className="text-gray-400">
+                  You will see all people who follow you here.
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </DialogContent>
       </Dialog>
@@ -196,28 +252,66 @@ export default function ProfileHeader({
             <DialogTitle className="text-white">Following</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 max-h-80 overflow-y-auto">
-            {Array.from({ length: followingCount }).map((_, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-3 hover:bg-[#262626] rounded-lg transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#D493FF]/20 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-[#D493FF]">
-                      {i + 1}
-                    </span>
+            {followingList?.length !== 0 ? (
+              followingList?.map((following: ProfileType) => {
+                const isThisUserPending =
+                  mutateisPending &&
+                  unfollowVariables === following.auth_user_id;
+                return (
+                  <div
+                    key={following.id}
+                    className="flex items-center justify-between p-3 hover:bg-[#262626] rounded-lg transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden bg-[#262626] border border-[#D493FF]/20">
+                        {following.avatar_url ? (
+                          <Image
+                            src={following.avatar_url}
+                            alt={`${following.username}'s avatar`}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center w-full h-full text-xs font-bold text-[#D493FF]">
+                            {following.username?.substring(0, 2).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">
+                          {following.username}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          {following.fullname}
+                        </span>
+                      </div>
+                    </div>
+                    <Button
+                      disabled={isThisUserPending}
+                      variant="ghost"
+                      size="sm"
+                      className="text-[#A1A1AA] hover:text-red-400"
+                      onClick={() => mutatefollow(following.auth_user_id)}
+                    >
+                      {isOwnProfile
+                        ? isThisUserPending
+                          ? "..."
+                          : "unfollow"
+                        : userId === following.auth_user_id
+                          ? "You"
+                          : "Follow"}
+                    </Button>
                   </div>
-                  <span className="text-sm">Following {i + 1}</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-[#A1A1AA] hover:bg-[#262626]"
-                >
-                  Unfollow
-                </Button>
+                );
+              })
+            ) : (
+              <div className="flex flex-col gap-1 items-center justify-center pt-3 pb-4">
+                <h4>People you follow</h4>
+                <p className="text-gray-400">
+                  Once you follow people, you will see them here.
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </DialogContent>
       </Dialog>

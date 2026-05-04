@@ -26,3 +26,16 @@ export interface PostDialogProps {
   action: "edit" | "create";
   initialdata: PostItem | null;
 }
+
+
+export interface ProfileHeaderProps {
+  name: string;
+  bio: string;
+  postsCount: number | undefined;
+  followersCount: number;
+  followingCount: number;
+  profileImage: string;
+  isOwnProfile: boolean;
+  isFollowing: boolean;
+  userId: string
+}

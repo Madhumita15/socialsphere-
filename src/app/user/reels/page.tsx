@@ -38,6 +38,7 @@ const Reels = () => {
               videoSrc={reel.media_url}
               authorName={reel.author.username}
               avatar_url={reel.author.avatar_url}
+              userId={reel.user_id}
               // comments={reel.comments}
             />
           </div>

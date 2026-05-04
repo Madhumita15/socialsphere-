@@ -17,10 +17,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
-
 const UserSidebar = () => {
   const pathname = usePathname();
-  const router = useRouter()
+  const router = useRouter();
   const { logoutUser, user } = useAuthStore();
   const sidebarMenu = [
     { path: "/user/home", name: "Home", icon: LayoutDashboard },
@@ -30,25 +29,25 @@ const UserSidebar = () => {
     { path: "/user/profile", name: "Profile", icon: User },
   ];
 
-  function useIsClinet (){
+  function useIsClinet() {
     return useSyncExternalStore(
-      ()=> ()=> {},
-      ()=> true,
-      ()=> false
-
-    )
+      () => () => {},
+      () => true,
+      () => false,
+    );
   }
 
-  const isClient = useIsClinet()
-  if(!isClient) return null
+  const isClient = useIsClinet();
+  if (!isClient) return null;
 
- 
- 
   return (
     <div>
       <div className=" flex-col pt-12 fixed left-0 top-0 hidden md:block">
         <div className="pr-8 pl-8" style={{ width: "240px", height: "51px" }}>
-          <h1 onClick={()=> router.push("/user/home")} className="font-extrabold cursor-pointer font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent">
+          <h1
+            onClick={() => router.push("/user/home")}
+            className="font-extrabold cursor-pointer font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent"
+          >
             SocialSphere+
           </h1>
           <p className="text-[10px] tracking-[2px] leading-3.75 font-normal text-[#71717A]">
@@ -78,21 +77,16 @@ const UserSidebar = () => {
           </Collapsible>
         </div>
 
-        <div className="pr-8 pl-8 mt-5 ">
-          <Button className=" rounded-[12px] bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black w-52 h-14 font-bold text-[16px] tracking-[-0.4px] leading-6 flex items-center">
-            Create Post
+        <div className="w-full">
+          <Button
+            onClick={() => logoutUser()}
+            className="md:ml-5  absolute md:-bottom-23 lg:-bottom-43 cursor-pointer rounded-lg bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black font-bold h-8 p-5 w-full  flex items-center justify-center hover:shadow-lg hover:shadow-[#D493FF]/50 transition-all duration-300"
+          >
+            <LogOut /> Logout
           </Button>
         </div>
 
-        <Button
-          variant="destructive"
-          onClick={() => logoutUser()}
-          className=" absolute lg:-bottom-24  rounded-lg text-white font-bold h-8 w-full  flex items-center justify-center hover:shadow-lg hover:shadow-[#D493FF]/50 transition-all duration-300"
-        >
-          <LogOut /> Logout
-        </Button>
-
-        <div className="absolute md:-bottom-11/12 lg:-bottom-52 p-5 bg-[#121111] md:w-64 lg:w-[288px] h-26 flex items-center gap-2">
+        <div className="absolute md:-bottom-50 lg:-bottom-70 p-5 bg-[#121111] md:w-72 lg:w-[288px] h-26 flex items-center gap-2">
           <div className="flex w-8 h-8 rounded-full  bg-[#4d4c4c] items-center justify-center ">
             <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#FF7354]">
               {isClient && user?.avatar_url ? (
@@ -103,15 +97,16 @@ const UserSidebar = () => {
                   height={36}
                   className="w-full h-full object-cover"
                 />
-              ) : <div className="w-full h-full bg-gray-600" />}
+              ) : (
+                <div className="w-full h-full bg-gray-600" />
+              )}
             </div>
           </div>
-         
-            <div className="flex flex-col">
-              <p>{isClient ? user?.fullname : ""}</p>
-              <p>{isClient ? user?.email : ""}</p>
-            </div>
-       
+
+          <div className="flex flex-col">
+            <p>{isClient ? user?.fullname : ""}</p>
+            <p>{isClient ? user?.email : ""}</p>
+          </div>
         </div>
       </div>
 
@@ -137,8 +132,8 @@ const UserSidebar = () => {
           })}
 
           {/* Create Post Button */}
-          <Button className="rounded-lg bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black font-bold h-12 w-12 p-0 flex items-center justify-center hover:shadow-lg hover:shadow-[#D493FF]/50 transition-all duration-300">
-            <Plus className="w-6 h-6" />
+          <Button   onClick={() => logoutUser()} className="rounded-lg bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black font-bold h-12 w-12 p-0 flex items-center justify-center hover:shadow-lg hover:shadow-[#D493FF]/50 transition-all duration-300">
+             Logout
           </Button>
         </div>
       </div>

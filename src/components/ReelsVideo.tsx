@@ -1,18 +1,21 @@
-'use client'
+"use client";
 
-import { Heart, MessageCircle, Share2, Bookmark } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import Image from 'next/image'
+import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useCreateFollow, useGetFollow } from "@/hooks/useFollow";
 
 interface ReelsVideoProps {
-  id: string
-  username: string
-  caption: string
-  likes: number
+  id: string;
+  username: string;
+  caption: string;
+  likes: number;
   // comments: number
-  videoSrc: string
-  authorName: string
-  avatar_url: string
+  videoSrc: string;
+  authorName: string;
+  avatar_url: string;
+  userId: string;
 }
 
 export function ReelsVideo({
@@ -23,7 +26,11 @@ export function ReelsVideo({
   authorName,
   avatar_url,
   videoSrc,
+  userId,
 }: ReelsVideoProps) {
+  const { user } = useAuthStore();
+  const { mutate: followMutate, isPending } = useCreateFollow();
+  const { data } = useGetFollow(userId);
   return (
     <div className="relative h-screen w-full snap-start overflow-hidden bg-black">
       {/* Video Background */}
@@ -37,7 +44,7 @@ export function ReelsVideo({
         playsInline
       />
 
-       {/* Dark Gradient Overlay (Bottom) */}
+      {/* Dark Gradient Overlay (Bottom) */}
       <div className="absolute inset-0 bg-linear-to-t from-black via-black/30 to-transparent" />
 
       {/* Header - Back Button */}
@@ -48,26 +55,41 @@ export function ReelsVideo({
       {/* Bottom-Left: Username & Caption Overlay */}
       <div className="absolute bottom-24 left-0 z-10 p-4 max-w-xs sm:bottom-20">
         <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#D493FF] to-[#FF7354] p-[2px]">
-                      <div className="relative h-full w-full overflow-hidden rounded-full bg-gray-800">
-                        <Image
-                          src={avatar_url}
-                          alt="author profile"
-                          fill
-                          className="object-cover"
-                          sizes="40px"
-                        />
-                      </div>
-                    </div>
-        
-                    {/* Author Info */}
-                    <div className="flex flex-col">
-                      <p className="text-white font-semibold text-sm leading-none">
-                        {authorName}
-                      </p>
-                    </div>
-                  </div>
-        <p className="text-white font-semibold text-xs sm:text-sm">{username}</p>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#D493FF] to-[#FF7354] p-[2px]">
+            <div className="relative h-full w-full overflow-hidden rounded-full bg-gray-800">
+              <Image
+                src={avatar_url}
+                alt="author profile"
+                fill
+                className="object-cover"
+                sizes="40px"
+              />
+            </div>
+          </div>
+
+          {/* Author Info */}
+          <div className="flex flex-col">
+            <p className="text-white font-semibold text-sm leading-none">
+              {authorName}
+            </p>
+          </div>
+
+          <div>
+            {user?.auth_user_id !== userId && (
+              <Button
+                variant={data ? "destructive" : "outline"}
+                className={`cursor-pointer px-3 transition-all ${data ? "bg-[#262626] text-white" : "bg-black text-white"}`}
+                onClick={() => followMutate(userId)}
+                disabled={isPending}
+              >
+                {isPending ? "..." : data ? "Unfollow" : "Follow"}
+              </Button>
+            )}
+          </div>
+        </div>
+        <p className="text-white font-semibold text-xs sm:text-sm">
+          {username}
+        </p>
         <p className="text-white text-xs sm:text-sm line-clamp-2 mt-1 opacity-90">
           {caption}
         </p>
@@ -75,7 +97,7 @@ export function ReelsVideo({
 
       {/* Right Side: Vertical Action Icons Overlay */}
       <div className="absolute right-0 bottom-20 sm:bottom-20 md:bottom-24 z-10 flex flex-col gap-4 sm:gap-5 md:gap-6 pr-2 sm:pr-3 md:pr-4 pb-2 sm:pb-3 md:pb-4">
-          {/* Like Button */}
+        {/* Like Button */}
         <div className="flex flex-col items-center gap-1.5">
           <Button
             variant="ghost"
@@ -84,7 +106,9 @@ export function ReelsVideo({
           >
             <Heart className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-white fill-white" />
           </Button>
-          <span className="text-white text-xs sm:text-sm font-semibold">{likes}</span>
+          <span className="text-white text-xs sm:text-sm font-semibold">
+            {likes}
+          </span>
         </div>
 
         {/* Comment Button */}
@@ -120,7 +144,7 @@ export function ReelsVideo({
             <Bookmark className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-white" />
           </Button>
         </div>
-        </div>
+      </div>
     </div>
-  )
+  );
 }

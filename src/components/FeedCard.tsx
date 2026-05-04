@@ -1,6 +1,14 @@
 import Image from "next/image";
-import { Heart, MessageCircle, Share2, Bookmark, Play } from "lucide-react";
+import {
+  Heart,
+  MessageCircle,
+  Share2,
+  Bookmark,
+} from "lucide-react";
 import { useState } from "react";
+import { Button } from "./ui/button";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useCreateFollow, useGetFollow } from "@/hooks/useFollow";
 
 interface FeedCardProps {
   id: number;
@@ -11,8 +19,9 @@ interface FeedCardProps {
   mediaUrl: string;
   mediaType: "image" | "video";
   likes: number;
-  // comments: number;
+  comments: number;
   description: string;
+  userId: string;
 }
 
 const FeedCard: React.FC<FeedCardProps> = ({
@@ -24,10 +33,15 @@ const FeedCard: React.FC<FeedCardProps> = ({
   likes,
   description,
   authorName,
+  userId,
+  comments,
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
+  const { user } = useAuthStore();
+  const { mutate: followMutate, isPending } = useCreateFollow();
+  const { data } = useGetFollow(userId);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -93,7 +107,6 @@ const FeedCard: React.FC<FeedCardProps> = ({
                 autoPlay
                 playsInline
               />
-             
             </>
           )}
         </div>
@@ -144,22 +157,34 @@ const FeedCard: React.FC<FeedCardProps> = ({
         {/* Engagement Stats & Description */}
         <div className="px-4 py-3 space-y-2">
           {/* Likes Count */}
-          <p className="text-white font-semibold text-sm">
-            {likeCount.toLocaleString()} likes
-          </p>
+          <div className="flex gap-4 items-center">
+            <p className="text-white font-semibold text-sm">
+              {likeCount} likes
+            </p>
+            {user?.auth_user_id !== userId && (
+              <Button
+              
+                variant={data ? "destructive" : "outline"}
+                className={`cursor-pointer px-3 transition-all ${data ? "bg-[#262626] text-white" : "bg-black text-white"}`}
+                onClick={() => followMutate(userId)}
+                disabled={isPending}
+              >
+                {isPending ? "..." : data ? "Unfollow" : "Follow"}
+              </Button>
+            )}
+          </div>
 
           {/* Description */}
           <div>
             <p className="text-white text-sm leading-relaxed">
-              <span className="font-semibold">{authorName}</span>{" "}
               <span className="text-[#A1A1AA]">{description}</span>
             </p>
           </div>
 
           {/* Comments Count */}
-          {/* <button className="text-[#71717A] text-xs hover:text-[#A1A1AA] transition-colors">
+          <button className="text-[#71717A] text-xs hover:text-[#A1A1AA] transition-colors">
             View all {comments} comments
-          </button> */}
+          </button>
         </div>
       </div>
     </>
