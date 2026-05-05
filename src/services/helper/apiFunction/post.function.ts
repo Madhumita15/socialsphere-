@@ -3,16 +3,28 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { ProfileType } from "@/typescript/type/auth.type";
 import { PostFormType } from "@/typescript/type/post.type";
 
-export const getAllPost = async () => {
+export const getAllPost = async (currentUserId?: string) => {
   try {
     const { data: getPostData, error: getPostError } = await supabase
       .from("posts")
-      .select("*");
+      .select(
+        `*,author:profile(
+        fullname,
+        username,
+        avatar_url
+      ), user_has_liked:likes!left(id)`,
+      )
+      .eq("likes.user_id", currentUserId);
     if (getPostError) throw getPostError;
     console.log("getPostData", getPostData);
+    const postsWithLikeStatus = getPostData.map((post) => ({
+      ...post,
+      user_has_liked: post.user_has_liked?.length > 0,
+    }));
+    console.log("postwithlikestatus", postsWithLikeStatus);
     return {
       success: true,
-      getPostData,
+      postsWithLikeStatus,
     };
   } catch {
     return {
@@ -26,21 +38,28 @@ export const infinityPost = async ({
   pageParam,
   signal,
   media_type,
+  userId,
 }: {
   pageParam: number;
   signal: AbortSignal;
   media_type?: "video" | "image";
+  userId: string | undefined;
 }) => {
   try {
     const pageSize = 8;
     const from = (pageParam - 1) * pageSize;
     const to = pageParam * pageSize - 1;
 
-    let query = supabase.from("posts").select(`*, author:profile(
+    let query = supabase
+      .from("posts")
+      .select(
+        `*, author:profile(
         fullname,
         username,
         avatar_url
-      )`);
+      ), user_has_liked:likes!left(id)`,
+      )
+      .eq("likes.user_id", userId);
 
     if (media_type) {
       query = query.eq("media_type", media_type);
@@ -51,10 +70,14 @@ export const infinityPost = async ({
       .range(from, to)
       .abortSignal(signal);
     if (getScrollError) throw getScrollError;
+    const formattedData = getScrollData?.map((post) => ({
+      ...post,
+      user_has_liked: post.user_has_liked && post.user_has_liked.length > 0,
+    }));
 
     return {
       success: true,
-      getScrollData,
+      formattedData,
     };
   } catch {
     return {
@@ -64,18 +87,40 @@ export const infinityPost = async ({
   }
 };
 
-export const getPostById = async (id: string) => {
+
+
+
+
+
+export const getPostById = async ({
+  id,
+  userId,
+}: {
+  id: string;
+  userId: string | undefined;
+}) => {
   try {
     const { data: getPostData, error: getPostError } = await supabase
       .from("posts")
-      .select("*")
+      .select(
+        `*, author:profile(
+        fullname,
+        username,
+        avatar_url
+      ),user_has_liked:likes!left(id)`,
+      )
+      .eq("likes.user_id", userId)
       .eq("id", id)
-      .single();
+      // .single();
     if (getPostError) throw getPostError;
     console.log("getPostData", getPostData);
+    const formattedData = getPostData?.map((post) => ({
+      ...post,
+      user_has_liked: post.user_has_liked && post.user_has_liked.length > 0,
+    }));
     return {
       success: true,
-      getPostData,
+      formattedData,
     };
   } catch {
     return {
@@ -139,7 +184,7 @@ export const createPost = async ({
     if (profileError) throw profileError;
     console.log("profileData", profileData);
     console.log("postData", postData);
-    useAuthStore.getState().refreshUser()
+    useAuthStore.getState().refreshUser();
     return {
       success: true,
       message: "Post Created Successfully!",
@@ -187,7 +232,7 @@ export const updatePost = async ({
   }
 };
 
-export const deletePost = async (id: string, user: ProfileType ) => {
+export const deletePost = async (id: string, user: ProfileType) => {
   try {
     const { data: postData, error: postError } = await supabase
       .from("posts")
@@ -216,7 +261,7 @@ export const deletePost = async (id: string, user: ProfileType ) => {
       .eq("auth_user_id", user.auth_user_id);
     if (profileError) throw profileError;
     console.log("profileData", profileData);
-    useAuthStore.getState().refreshUser()
+    useAuthStore.getState().refreshUser();
     return {
       success: true,
       message: "Post delete Successfully!",

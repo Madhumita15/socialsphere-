@@ -32,5 +32,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login", "/user/:path*", "/admin/:path*"],
+  matcher: ["/login", "/user/:path*", "/admin/:path*, '/((?!api|_next/static|_next/image|favicon.ico|reels/.*).*)',"],
 };

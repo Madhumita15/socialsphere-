@@ -7,7 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 export default function Home() {
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInifinityPost();
-  const posts = data?.pages.flatMap((page) => page.getScrollData) || [];
+  const posts = data?.pages.flatMap((page) => page.formattedData) || [];
   console.log("posts", posts)
 
   useEffect(() => {
@@ -130,6 +130,7 @@ export default function Home() {
               comments={post.comment_count}
               description={post.caption}
               userId={post.user_id}
+              user_has_liked={post.user_has_liked}
             />
           );
         })}

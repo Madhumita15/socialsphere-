@@ -17,10 +17,10 @@ export default function ProfileTabs() {
   const {user} = useAuthStore()
   const [open, setOpen] = useState(false);
 
-  const postOnly = data?.getPostData?.filter(
+  const postOnly = data?.postsWithLikeStatus?.filter(
     (post) => post.media_type === "image" && post.user_id === user?.auth_user_id,
   );
-  const reelsOnly = data?.getPostData?.filter(
+  const reelsOnly = data?.postsWithLikeStatus?.filter(
     (post) => post.media_type === "video" && post.user_id === user?.auth_user_id,
   );
 

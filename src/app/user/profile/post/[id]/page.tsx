@@ -9,13 +9,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import loadingAnimation from "@/services/json/lottie/Loading animation.json";
 import Lottie from "lottie-react";
-import { useAuthStore } from "@/store/useAuthStore";
+
 
 const SinglePost = () => {
   const [open, setOpen] = useState(false);
   const params = useParams();
   const router = useRouter();
-  const {user} = useAuthStore()
   const id = params?.id as string;
   const { data, isLoading, isError, error } = useGetPostById(id as string);
   const { mutate: deleteMutate, isError: deleteError } = useDeletePost();
@@ -28,7 +27,8 @@ const SinglePost = () => {
     );
   }
 
-  const item = data?.getPostData;
+  const item = data?.formattedData?.[0]
+  console.log("item", item)
 
   return (
     <div className="min-h-screen pb-16 pt-5   z-0 bg-black text-white">
@@ -195,7 +195,7 @@ const SinglePost = () => {
                 action="edit"
                 open={open}
                 setOpen={setOpen}
-                initialdata={data?.getPostData}
+                initialdata={data?.formattedData?.[0]}
               />
             </div>
           </div>

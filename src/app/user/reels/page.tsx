@@ -7,7 +7,7 @@ import { useEffect } from "react";
 const Reels = () => {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInifinityPost("video", true);
-  const posts = data?.pages.flatMap((page) => page.getScrollData);
+  const posts = data?.pages.flatMap((page) => page.formattedData);
   // console.log(posts)
   const filteredPost = posts?.filter((post) => post.media_type === "video");
   console.log("filteredPost", filteredPost);
@@ -39,7 +39,8 @@ const Reels = () => {
               authorName={reel.author.username}
               avatar_url={reel.author.avatar_url}
               userId={reel.user_id}
-              // comments={reel.comments}
+              comments={reel.comment_count}
+              user_has_liked={reel.user_has_liked}
             />
           </div>
         ))}

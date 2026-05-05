@@ -9,20 +9,10 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCreateFollow, useGetFollow } from "@/hooks/useFollow";
+import { useToggleLike } from "@/hooks/useLike";
+import { FeedCardProps } from "@/typescript/interface/post.interface";
+import { toast } from "sonner";
 
-interface FeedCardProps {
-  id: number;
-  authorName: string;
-  authorInitials: string;
-  location: string;
-  timeAgo: string;
-  mediaUrl: string;
-  mediaType: "image" | "video";
-  likes: number;
-  comments: number;
-  description: string;
-  userId: string;
-}
 
 const FeedCard: React.FC<FeedCardProps> = ({
   authorInitials,
@@ -35,18 +25,39 @@ const FeedCard: React.FC<FeedCardProps> = ({
   authorName,
   userId,
   comments,
+  user_has_liked,
+  id
 }) => {
-  const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes);
   const { user } = useAuthStore();
   const { mutate: followMutate, isPending } = useCreateFollow();
   const { data } = useGetFollow(userId);
+  const {mutate: mutateToggle} = useToggleLike()
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+
+
+  const handleExternalShare = async () => {
+  const shareData = {
+    title: "Check out this Reel!",
+    text: description,
+    url: `${window.location.origin}/reels/${id}`, // Assumes you have a dynamic route
   };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      // Fallback: Copy to clipboard if Web Share API isn't supported (Desktop)
+      await navigator.clipboard.writeText(shareData.url);
+      toast.success("Link copied to clipboard!");
+    }
+  } catch (err) {
+    console.error("Error sharing:", err);
+  }
+};
+  
+
+  
 
   return (
     <>
@@ -116,12 +127,12 @@ const FeedCard: React.FC<FeedCardProps> = ({
           <div className="flex items-center gap-2">
             {/* Like Button */}
             <button
-              onClick={handleLike}
-              className="p-2 hover:bg-[#262626] rounded-full transition-colors group"
+              onClick={()=> mutateToggle(id)}
+              className="p-2 cursor-pointer hover:bg-[#262626] rounded-full transition-colors group"
             >
               <Heart
                 className={`w-6 h-6 transition-all duration-200 ${
-                  isLiked
+                  user_has_liked
                     ? "fill-[#FF7354] text-[#FF7354]"
                     : "text-[#A1A1AA] group-hover:text-white"
                 }`}
@@ -134,7 +145,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
             </button>
 
             {/* Share Button */}
-            <button className="p-2 hover:bg-[#262626] rounded-full transition-colors group">
+            <button className="p-2 hover:bg-[#262626] rounded-full transition-colors group" onClick={()=> handleExternalShare()}>
               <Share2 className="w-6 h-6 text-[#A1A1AA] group-hover:text-white" />
             </button>
           </div>
@@ -159,7 +170,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
           {/* Likes Count */}
           <div className="flex gap-4 items-center">
             <p className="text-white font-semibold text-sm">
-              {likeCount} likes
+              {likes} likes
             </p>
             {user?.auth_user_id !== userId && (
               <Button

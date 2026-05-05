@@ -39,3 +39,18 @@ export interface ProfileHeaderProps {
   isFollowing: boolean;
   userId: string
 }
+
+export interface FeedCardProps {
+  id: string;
+  authorName: string;
+  authorInitials: string;
+  location: string;
+  timeAgo: string;
+  mediaUrl: string;
+  mediaType: "image" | "video";
+  likes: number;
+  comments: number;
+  description: string;
+  userId: string;
+  user_has_liked: boolean
+}

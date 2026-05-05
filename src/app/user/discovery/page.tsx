@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 const Discovery = () => {
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useInifinityPost();
-  const posts = data?.pages.flatMap((page) => page.getScrollData);
+  const posts = data?.pages.flatMap((page) => page.formattedData);
 
   useEffect(() => {
     const handleScroll = () => {

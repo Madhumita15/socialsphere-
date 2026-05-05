@@ -20,17 +20,22 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export const useGetPost = () => {
+  const {user} = useAuthStore()
   return useQuery({
-    queryKey: ["getpost"],
-    queryFn: getAllPost,
+    queryKey: ["getpost", user?.auth_user_id],
+    queryFn: ()=> getAllPost(user?.auth_user_id),
+    enabled: !!user?.auth_user_id
   });
+  
 };
 
 export const useGetPostById = (id: string) => {
+  const {user} = useAuthStore()
+  const userId = user?.auth_user_id
   return useQuery({
     queryKey: ["getpostbyid", id],
-    queryFn: () => getPostById(id),
-    enabled: !!id,
+    queryFn: () => getPostById({id, userId}),
+    enabled: !!id && !!userId,
   });
 };
 
@@ -38,13 +43,15 @@ export const useInifinityPost = (
   media_type?: "video" | "image",
   loop?: boolean,
 ) => {
+  const {user} = useAuthStore()
+  const userId = user?.auth_user_id
   return useInfiniteQuery({
     queryKey: ["inifinitypost", media_type],
     queryFn: ({ pageParam = 1, signal }) =>
-      infinityPost({ pageParam, signal, media_type }),
+      infinityPost({ pageParam, signal, media_type, userId }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      const lastPageData = lastPage?.getScrollData || [];
+      const lastPageData = lastPage?.formattedData || [];
       if (loop) {
         // If the last page was empty or small, we've run out of new stuff
         if (lastPageData.length < 8) {
