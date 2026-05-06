@@ -41,6 +41,7 @@ const Reels = () => {
               userId={reel.user_id}
               comments={reel.comment_count}
               user_has_liked={reel.user_has_liked}
+              isSaved={reel.isSaved}
             />
           </div>
         ))}

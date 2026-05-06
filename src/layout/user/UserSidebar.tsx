@@ -80,34 +80,13 @@ const UserSidebar = () => {
         <div className="w-full">
           <Button
             onClick={() => logoutUser()}
-            className="md:ml-5  absolute md:-bottom-23 lg:-bottom-43 cursor-pointer rounded-lg bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black font-bold h-8 p-5 w-full  flex items-center justify-center hover:shadow-lg hover:shadow-[#D493FF]/50 transition-all duration-300"
+            className="md:ml-5  absolute md:-bottom-64 lg:-bottom-64 cursor-pointer rounded-lg bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black font-bold h-8 p-5 w-full  flex items-center justify-center hover:shadow-lg hover:shadow-[#D493FF]/50 transition-all duration-300"
           >
             <LogOut /> Logout
           </Button>
         </div>
 
-        <div className="absolute md:-bottom-50 lg:-bottom-70 p-5 bg-[#121111] md:w-72 lg:w-[288px] h-26 flex items-center gap-2">
-          <div className="flex w-8 h-8 rounded-full  bg-[#4d4c4c] items-center justify-center ">
-            <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#FF7354]">
-              {isClient && user?.avatar_url ? (
-                <Image
-                  src={user?.avatar_url}
-                  alt="image"
-                  width={36}
-                  height={36}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-600" />
-              )}
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <p>{isClient ? user?.fullname : ""}</p>
-            <p>{isClient ? user?.email : ""}</p>
-          </div>
-        </div>
+       
       </div>
 
       {/* mobile sidebar */}
@@ -131,10 +110,8 @@ const UserSidebar = () => {
             );
           })}
 
-          {/* Create Post Button */}
-          <Button   onClick={() => logoutUser()} className="rounded-lg bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black font-bold h-12 w-12 p-0 flex items-center justify-center hover:shadow-lg hover:shadow-[#D493FF]/50 transition-all duration-300">
-             Logout
-          </Button>
+         
+         
         </div>
       </div>
     </div>

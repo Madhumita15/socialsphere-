@@ -12,14 +12,15 @@ export const getAllPost = async (currentUserId?: string) => {
         fullname,
         username,
         avatar_url
-      ), user_has_liked:likes!left(id)`,
+      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
       )
-      .eq("likes.user_id", currentUserId);
+      .eq("likes.user_id", currentUserId).eq("bookmark.user_id", currentUserId)
     if (getPostError) throw getPostError;
     console.log("getPostData", getPostData);
     const postsWithLikeStatus = getPostData.map((post) => ({
       ...post,
-      user_has_liked: post.user_has_liked?.length > 0,
+      user_has_liked: (post.user_has_liked?.length ?? 0) > 0,
+      isSaved: !!(post.isSaved.length ?? 0 > 0)
     }));
     console.log("postwithlikestatus", postsWithLikeStatus);
     return {
@@ -57,9 +58,9 @@ export const infinityPost = async ({
         fullname,
         username,
         avatar_url
-      ), user_has_liked:likes!left(id)`,
+      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
       )
-      .eq("likes.user_id", userId);
+      .eq("likes.user_id", userId).eq("bookmark.user_id", userId);
 
     if (media_type) {
       query = query.eq("media_type", media_type);
@@ -73,6 +74,7 @@ export const infinityPost = async ({
     const formattedData = getScrollData?.map((post) => ({
       ...post,
       user_has_liked: post.user_has_liked && post.user_has_liked.length > 0,
+      isSaved: !!(post.isSaved.length && post.isSaved.length > 0)
     }));
 
     return {
@@ -107,16 +109,18 @@ export const getPostById = async ({
         fullname,
         username,
         avatar_url
-      ),user_has_liked:likes!left(id)`,
+      ),user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
       )
       .eq("likes.user_id", userId)
       .eq("id", id)
+      .eq("bookmark.user_id", userId)
       // .single();
     if (getPostError) throw getPostError;
     console.log("getPostData", getPostData);
     const formattedData = getPostData?.map((post) => ({
       ...post,
       user_has_liked: post.user_has_liked && post.user_has_liked.length > 0,
+      isSaved: !!(post.isSaved.length && post.isSaved.length > 0)
     }));
     return {
       success: true,
@@ -273,3 +277,6 @@ export const deletePost = async (id: string, user: ProfileType) => {
     };
   }
 };
+
+
+

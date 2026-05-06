@@ -1,4 +1,3 @@
-// app/reels/[id]/page.tsx
 import SingleReel from "@/components/SingleReel";
 import { getPostById } from "@/services/helper/apiFunction/post.function";
 import { Metadata } from "next";
@@ -13,6 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   const res = await getPostById({ id, userId: undefined });
   const post = res?.formattedData?.[0]; 
+  console.log("post", post)
 
   return {
     title: `Reel by ${post?.author?.fullname || 'User'}`,

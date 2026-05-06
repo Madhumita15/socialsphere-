@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 
 
 export default function PostsGrid({ items, isReels = false }: PostsGridProps) {
+  console.log("items", items)
   const router = useRouter()
   if (!items || items.length === 0) {
     return (
@@ -23,6 +24,8 @@ export default function PostsGrid({ items, isReels = false }: PostsGridProps) {
       </div>
     );
   }
+
+ 
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">

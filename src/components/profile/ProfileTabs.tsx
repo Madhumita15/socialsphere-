@@ -10,12 +10,15 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import Lottie from "lottie-react";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGetBookMark } from "@/hooks/useBookMark";
 
 
 export default function ProfileTabs() {
   const { data, isError, isLoading, error } = useGetPost();
   const {user} = useAuthStore()
   const [open, setOpen] = useState(false);
+  const {data:saveData} = useGetBookMark()
+  console.log("saveData", saveData)
 
   const postOnly = data?.postsWithLikeStatus?.filter(
     (post) => post.media_type === "image" && post.user_id === user?.auth_user_id,
@@ -101,7 +104,7 @@ export default function ProfileTabs() {
 
           {/* Saved Tab */}
           <TabsContent value="saved" className="mt-8">
-            <PostsGrid items={[]} />
+            <PostsGrid items={saveData || []} />
           </TabsContent>
         </Tabs>
       </div>

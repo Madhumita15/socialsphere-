@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import UserSidebar from "../../layout/user/UserSidebar";
-import UserNavbar from "../../layout/user/UserNavbar";
 import AdminSidebar from "@/layout/admin/AdminSidebar";
 import AdminNavbar from "@/layout/admin/AdminNavbar";
 

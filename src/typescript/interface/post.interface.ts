@@ -17,6 +17,7 @@ export interface PostItem {
 export interface PostsGridProps {
   items: PostItem[];
   isReels?: boolean;
+ 
 }
 
 export interface PostDialogProps {
@@ -53,4 +54,5 @@ export interface FeedCardProps {
   description: string;
   userId: string;
   user_has_liked: boolean
+  isSaved: boolean
 }

@@ -10,6 +10,8 @@ import loadingAnimation from "@/services/json/lottie/Loading animation.json";
 import { useToggleLike } from "@/hooks/useLike";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
+import { useShare } from "@/hooks/useShare";
+import { useBookMark } from "@/hooks/useBookMark";
 
 
 
@@ -21,6 +23,8 @@ const SingleReel = () => {
     console.log("data", data?.formattedData);
     const singleReelData = data?.formattedData?.[0]
   const { mutate: mutateLike } = useToggleLike();
+  const {handleShare} = useShare()
+  const {mutate:bookMarkMutate} = useBookMark()
 
   if (isLoading) {
     return (
@@ -142,8 +146,15 @@ const SingleReel = () => {
             </div>
 
             {/* Share Button */}
-            <div className="flex flex-col items-center gap-1.5">
+            <div className="cursor-pointer flex flex-col items-center gap-1.5">
               <Button
+              onClick={(e)=>{
+                if(!user) {
+                  toast.success("Please Login first to share")
+                  return
+                }
+                handleShare(e, {id: singleReelData.id, authorName: singleReelData.author.fullname, type: singleReelData.media_type})
+              }}
                 variant="ghost"
                 size="icon"
                 className="rounded-full h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 hover:scale-110 transition-transform bg-black/40 hover:bg-black/60"
@@ -159,7 +170,7 @@ const SingleReel = () => {
                 size="icon"
                 className="rounded-full h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 hover:scale-110 transition-transform bg-black/40 hover:bg-black/60"
               >
-                <Bookmark className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-white" />
+                <Bookmark className={`h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-white ${singleReelData.isSaved ? "fill-red-600" :  "fill-white"}`} />
               </Button>
             </div>
           </div>

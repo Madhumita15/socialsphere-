@@ -11,6 +11,7 @@ import loadingAnimation from "@/services/json/lottie/Loading animation.json";
 import Lottie from "lottie-react";
 
 
+
 const SinglePost = () => {
   const [open, setOpen] = useState(false);
   const params = useParams();
@@ -18,6 +19,7 @@ const SinglePost = () => {
   const id = params?.id as string;
   const { data, isLoading, isError, error } = useGetPostById(id as string);
   const { mutate: deleteMutate, isError: deleteError } = useDeletePost();
+ 
 
   if (isLoading) {
     return (

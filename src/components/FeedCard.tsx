@@ -5,13 +5,13 @@ import {
   Share2,
   Bookmark,
 } from "lucide-react";
-import { useState } from "react";
 import { Button } from "./ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCreateFollow, useGetFollow } from "@/hooks/useFollow";
 import { useToggleLike } from "@/hooks/useLike";
 import { FeedCardProps } from "@/typescript/interface/post.interface";
-import { toast } from "sonner";
+import { useShare } from "@/hooks/useShare";
+import { useBookMark } from "@/hooks/useBookMark";
 
 
 const FeedCard: React.FC<FeedCardProps> = ({
@@ -26,35 +26,19 @@ const FeedCard: React.FC<FeedCardProps> = ({
   userId,
   comments,
   user_has_liked,
-  id
+  id,
+  isSaved
 }) => {
-  const [isSaved, setIsSaved] = useState(false);
   const { user } = useAuthStore();
   const { mutate: followMutate, isPending } = useCreateFollow();
   const { data } = useGetFollow(userId);
   const {mutate: mutateToggle} = useToggleLike()
+  const {handleShare} = useShare()
+  const {mutate:bookmarkMutate} = useBookMark()
 
 
 
-  const handleExternalShare = async () => {
-  const shareData = {
-    title: "Check out this Reel!",
-    text: description,
-    url: `${window.location.origin}/reels/${id}`, // Assumes you have a dynamic route
-  };
-
-  try {
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else {
-      // Fallback: Copy to clipboard if Web Share API isn't supported (Desktop)
-      await navigator.clipboard.writeText(shareData.url);
-      toast.success("Link copied to clipboard!");
-    }
-  } catch (err) {
-    console.error("Error sharing:", err);
-  }
-};
+ 
   
 
   
@@ -65,7 +49,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
         {/* Post Header */}
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#D493FF] to-[#FF7354] p-[2px]">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#D493FF] to-[#FF7354] p-0.5">
               <div className="relative h-full w-full overflow-hidden rounded-full bg-gray-800">
                 <Image
                   src={authorInitials}
@@ -145,14 +129,15 @@ const FeedCard: React.FC<FeedCardProps> = ({
             </button>
 
             {/* Share Button */}
-            <button className="p-2 hover:bg-[#262626] rounded-full transition-colors group" onClick={()=> handleExternalShare()}>
+            <button className="cursor-pointer p-2 hover:bg-[#262626] rounded-full transition-colors group" onClick={(e)=> handleShare(e,{id:id, authorName:authorName, type: mediaType})}>
               <Share2 className="w-6 h-6 text-[#A1A1AA] group-hover:text-white" />
             </button>
           </div>
 
           {/* Save/Bookmark Button */}
           <button
-            onClick={() => setIsSaved(!isSaved)}
+          onClick={()=> bookmarkMutate(id)}
+            
             className="p-2 hover:bg-[#262626] rounded-full transition-colors group"
           >
             <Bookmark

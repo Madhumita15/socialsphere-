@@ -33,9 +33,9 @@ export const useGetPostById = (id: string) => {
   const {user} = useAuthStore()
   const userId = user?.auth_user_id
   return useQuery({
-    queryKey: ["getpostbyid", id],
+    queryKey: ["getpostbyid", id, userId],
     queryFn: () => getPostById({id, userId}),
-    enabled: !!id && !!userId,
+    enabled: !!id,
   });
 };
 

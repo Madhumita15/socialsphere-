@@ -2,6 +2,8 @@
 
 import { Eye } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 interface PostCardProps {
   id: string;
@@ -10,9 +12,10 @@ interface PostCardProps {
  
 }
 
-export function PostCard({ type, src }: PostCardProps) {
+export function PostCard({ type, src,id }: PostCardProps) {
+  const router = useRouter()
   return (
-    <div className="relative  aspect-square bg-black rounded-lg overflow-hidden group cursor-pointer">
+    <div className="relative  aspect-square bg-black rounded-lg overflow-hidden group cursor-pointer" onClick={()=> router.push(`reels/${id}`)}>
       {/* Post Content */}
       {type === "image" ? (
         <Image

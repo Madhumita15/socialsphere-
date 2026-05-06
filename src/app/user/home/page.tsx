@@ -9,6 +9,8 @@ export default function Home() {
     useInifinityPost();
   const posts = data?.pages.flatMap((page) => page.formattedData) || [];
   console.log("posts", posts)
+  
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -131,6 +133,7 @@ export default function Home() {
               description={post.caption}
               userId={post.user_id}
               user_has_liked={post.user_has_liked}
+              isSaved={post.isSaved}
             />
           );
         })}

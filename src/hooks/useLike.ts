@@ -11,18 +11,11 @@ export const useToggleLike = ()=>{
     return useMutation({
         mutationKey: ["toggleLike"],
         mutationFn: (post_id: string)=> toggleLike({user: user!, post_id: post_id}),
-        onSuccess: (res)=>{
+        onSuccess: (res, post_id)=>{
              queryClient.invalidateQueries({queryKey: ["getpost", user?.auth_user_id]})
              queryClient.invalidateQueries({queryKey: ["inifinitypost"]})
+             queryClient.invalidateQueries({queryKey: ["getpostbyid", post_id]})
           
-            console.log("res",res)
-            if(res.is_liked){
-                toast.success("You like this post")
-                 
-            }else{
-                toast.success("You unlike this post")
-                 
-            }
             
 
 

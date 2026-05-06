@@ -102,7 +102,7 @@ export default function ProfileHeader({
                       setOpen(true);
                       setIsEdit(true);
                     }}
-                    className=" bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black w-20 md:w-auto font-bold cursor-pointer"
+                    className=" bg-linear-to-r from-[#D493FF] to-[#FF7354] text-black w-10 md:w-auto font-bold cursor-pointer"
                   >
                     <Edit2 />
                   </Button>

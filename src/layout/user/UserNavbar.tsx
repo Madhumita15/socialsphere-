@@ -1,47 +1,134 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Bell, Search } from "lucide-react";
+import TextType from "@/components/TextType";
+import { useAuthStore } from "@/store/useAuthStore";
+import { Bell, ChevronDown, LogOut, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const UserNavbar = () => {
-  const pathname = usePathname();
-  const router = useRouter()
+  const router = useRouter();
+  const { user, logoutUser } = useAuthStore();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const navbarmenu = [
-    { path: "/featured", name: "Featured" },
-    { path: "/rising", name: "Rising" },
-    { path: "/artists", name: "Artists" },
-  ];
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function useIsClinet() {
+    return useSyncExternalStore(
+      () => () => {},
+      () => true,
+      () => false,
+    );
+  }
+
+  const isClient = useIsClinet();
+  if (!isClient) return null;
+
   return (
     <>
-      <div className="pr-12 pl-12  justify-between flex-row pt-6   hidden md:flex z-40">
-        <div className="flex flex-row md:gap-6 lg:gap-8">
-          {navbarmenu?.map((item) => {
-            const isActive = pathname === item.path;
-            return (
-              <Link
-                key={item.name}
-                href={item.path}
-                className={` font-semibold text-[14px] leading-5   ${isActive ? "text-[#D493FF] border-b-2 pb-1 border-[#D493FF] " : "text-[#A1A1AA]"}`}
-              >
-                {item.name}
-              </Link>
-            );
-          })}
+      <div className="pr-12 pl-12  justify-between flex-row pt-3   hidden md:flex z-40">
+        <div className="pt-3 relative">
+          <h1 className="text-2xl pl-10 font-bold">
+            <TextType
+              className=" bg-linear-to-r from-[#D493FF]  to-[#bb2b0b] bg-clip-text text-transparent"
+              text={[`Welcome ${ isClient && user?.fullname ? user.fullname : ""}`]}
+              typingSpeed={75}
+              pauseDuration={1500}
+              showCursor
+              cursorCharacter="_"
+              deletingSpeed={50}
+            />
+          </h1>
         </div>
-        <div className="flex items-center md:gap-3 lg:gap-5">
-          <div className="flex rounded-2xl gap-4 md:w-48 lg:w-69.5 h-9 pt-2.25 pr-6 pl-6 pb-2.5 bg-[#262626] ">
-            <Search className="text-[#71717A] w-[15.5px] h-[15.5px]" />{" "}
-            <Input
-              className="bg-transparent text-[14px] border-none outline-none  w-46 h-4.5"
-              placeholder="Search Creators...."
+
+        <div
+          className="flex items-center gap-3 sm:gap-5 relative"
+          ref={dropdownRef}
+        >
+          {/* Notification Icon */}
+          <button className="p-1 hover:bg-white/10 rounded-full transition-colors">
+            <Bell className="w-5 h-5 text-[#A1A1AA]" />
+          </button>
+
+          {/* Avatar Toggle Container */}
+          <div
+            className="flex items-center gap-2 cursor-pointer group"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 border-[#FF7354] group-hover:scale-105 transition-transform duration-200">
+              {isClient && user?.avatar_url ? (
+                <Image
+                  src={user?.avatar_url}
+                  alt="User Avatar"
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-600 flex items-center justify-center">
+                  <User size={16} className="text-white" />
+                </div>
+              )}
+            </div>
+            <ChevronDown
+              size={14}
+              className={`text-[#A1A1AA] transition-transform ${isOpen ? "rotate-180" : ""}`}
             />
           </div>
 
-          <Bell className="w-5 h-6 text-[#A1A1AA]" />
-          
+          {/* Dropdown Menu */}
+          {isOpen && (
+            <div className="absolute right-0 top-12 w-56 sm:w-64 bg-[#18181B] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
+              {/* User Info Section */}
+              <div className="p-4 border-b border-white/10 bg-white/5">
+                <p className="text-sm font-bold text-white truncate">
+                  {isClient && user ? user?.fullname : ""}
+                </p>
+                <p className="text-xs text-[#A1A1AA] truncate">
+                  {isClient && user ? user?.email : ""}
+                </p>
+              </div>
+
+              {/* Links */}
+              <div className="p-2">
+                <Link
+                  href="/user/profile"
+                  className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-[#ee2856] hover:text-white rounded-lg transition-all"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <User size={16} />
+                  View Profile
+                </Link>
+
+                <hr className="my-2 border-white/5" />
+
+                <button
+                  onClick={() => {
+                    logoutUser();
+                    setIsOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                >
+                  <LogOut size={16} />
+                  Log Out
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -49,20 +136,87 @@ const UserNavbar = () => {
       <div className="fixed top-0 left-0 right-0 bg-[#121111] border-b border-[#262626] md:hidden z-50">
         <div className="flex items-center justify-between px-4 py-3">
           {/* Logo */}
-          <h1 onClick={()=> router.push("/user/home")} className="font-extrabold cursor-pointer font-serif text-base bg-linear-to-r from-[#D493FF] to-[#FF7354] bg-clip-text text-transparent">
+          <h1
+            onClick={() => router.push("/user/home")}
+            className="font-extrabold cursor-pointer font-serif text-base bg-linear-to-r from-[#D493FF] to-[#FF7354] bg-clip-text text-transparent"
+          >
             SocialSphere+
           </h1>
 
-          {/* Search and Notification */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center rounded-full gap-2 px-3 h-8 bg-[#262626]">
-              <Search className="text-[#71717A] w-4 h-4" />
-              <Input
-                className="bg-transparent text-xs border-none outline-none w-20 h-full placeholder-[#71717A]"
-                placeholder="Search..."
+          <div
+            className="flex items-center gap-3 sm:gap-5 relative"
+            ref={dropdownRef}
+          >
+            {/* Notification Icon */}
+            <button className="p-1 hover:bg-white/10 rounded-full transition-colors">
+              <Bell className="w-5 h-5 text-[#A1A1AA]" />
+            </button>
+
+            {/* Avatar Toggle Container */}
+            <div
+              className="flex items-center gap-2 cursor-pointer group"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 border-[#FF7354] group-hover:scale-105 transition-transform duration-200">
+                {isClient && user?.avatar_url ? (
+                  <Image
+                    src={user?.avatar_url}
+                    alt="User Avatar"
+                    width={36}
+                    height={36}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-600 flex items-center justify-center">
+                    <User size={16} className="text-white" />
+                  </div>
+                )}
+              </div>
+              <ChevronDown
+                size={14}
+                className={`text-[#A1A1AA] transition-transform ${isOpen ? "rotate-180" : ""}`}
               />
             </div>
-            <Bell className="w-5 h-5 text-[#A1A1AA]" />
+
+            {/* Dropdown Menu */}
+            {isOpen && (
+              <div className="absolute right-0 top-12 w-56 sm:w-64 bg-[#18181B] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
+                {/* User Info Section */}
+                <div className="p-4 border-b border-white/10 bg-white/5">
+                  <p className="text-sm font-bold text-white truncate">
+                    {isClient && user ? user?.fullname : ""}
+                  </p>
+                  <p className="text-xs text-[#A1A1AA] truncate">
+                    {isClient && user ? user?.email : ""}
+                  </p>
+                </div>
+
+                {/* Links */}
+                <div className="p-2">
+                  <Link
+                    href="/user/profile"
+                    className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-[#ee2856] hover:text-white rounded-lg transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <User size={16} />
+                    View Profile
+                  </Link>
+
+                  <hr className="my-2 border-white/5" />
+
+                  <button
+                    onClick={() => {
+                      logoutUser();
+                      setIsOpen(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                  >
+                    <LogOut size={16} />
+                    Log Out
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
