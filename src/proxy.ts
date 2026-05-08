@@ -5,12 +5,21 @@ export function proxy(request: NextRequest) {
   console.log("pathname", pathname);
   const token = request.cookies.get("token")?.value;
   const role = request.cookies.get("role")?.value;
+  const status = request.cookies.get("status")?.value;
+
+  if (status === "blocked" && pathname !== "/banned") {
+    return NextResponse.redirect(new URL("/banned", request.url));
+  }
+  if (status !== "blocked" && pathname === "/banned") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   if (pathname.startsWith("/admin")) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    if (role !== "admin" && role !== "moderator") {
+    if (role !== "admin" && role !== "moderator" && status !== "blocked") {
       return NextResponse.redirect(new URL("/user/home", request.url));
     }
   }
@@ -18,7 +27,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (pathname === "/login" && token) {
+  if (pathname === "/login" && token && status !== "blocked") {
     if (role === "admin" || role === "moderator") {
       return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     }
@@ -32,5 +41,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login", "/user/:path*", "/admin/:path*, '/((?!api|_next/static|_next/image|favicon.ico|reels/.*).*)',"],
+  matcher: ["/login", "/user/:path*", "/admin/:path*", "/banned",],
 };

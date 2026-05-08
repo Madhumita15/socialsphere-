@@ -20,7 +20,7 @@ import { useSyncExternalStore } from "react";
 const UserSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { logoutUser, user } = useAuthStore();
+  const { logoutUser } = useAuthStore();
   const sidebarMenu = [
     { path: "/user/home", name: "Home", icon: LayoutDashboard },
     { path: "/user/discovery", name: "Discovery", icon: Compass },

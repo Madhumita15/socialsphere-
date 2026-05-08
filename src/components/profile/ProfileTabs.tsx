@@ -14,10 +14,10 @@ import { useGetBookMark } from "@/hooks/useBookMark";
 
 
 export default function ProfileTabs() {
-  const { data, isError, isLoading, error } = useGetPost();
+  const { data, isError:getPostIsError, isLoading:getPostLoading, error:postError } = useGetPost();
   const {user} = useAuthStore()
   const [open, setOpen] = useState(false);
-  const {data:saveData} = useGetBookMark()
+  const {data:saveData, isLoading:getBookMarkLoading, isError:bookMarkIsError, error:bookmarkError} = useGetBookMark()
   console.log("saveData", saveData)
 
   const postOnly = data?.postsWithLikeStatus?.filter(
@@ -27,7 +27,7 @@ export default function ProfileTabs() {
     (post) => post.media_type === "video" && post.user_id === user?.auth_user_id,
   );
 
-  if (isLoading) {
+  if (getBookMarkLoading || getPostLoading) {
     return (
       <div className="flex justify-center items-center pt-28">
         <Lottie width={50} height={50}  loop animationData={loadingAnimation}/>
@@ -71,9 +71,9 @@ export default function ProfileTabs() {
             </Button>
           </div>
           <div className="flex justify-center items-center">
-            {isError && (
+            {(bookMarkIsError || getPostIsError) && (
               <p className="text-red-200 text-xl font-bold ">
-                {error?.message}
+                {bookmarkError?.message || postError?.message}
               </p>
             )}
           </div>

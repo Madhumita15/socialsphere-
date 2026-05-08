@@ -1,16 +1,15 @@
 "use client"
 
-
-import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import { useAuthStore } from "@/store/useAuthStore";
-import { ChartNoAxesCombined,  LayoutDashboard, LogOut, MessageCircleWarning, User,  Workflow } from "lucide-react"
+import { ChartNoAxesCombined,  LayoutDashboard,  MessageCircleWarning, User,  Workflow } from "lucide-react"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSyncExternalStore } from "react";
 
 const AdminSidebar = () => {
   const pathname = usePathname()
-  const {logoutUser, role} = useAuthStore()
+  const { role} = useAuthStore()
   const adminSidebarMenu = [
     {path: "/admin/dashboard", name: "Dasboard", icon: LayoutDashboard},
     {path: "/admin/userManagement", name: "User Management", icon: User},
@@ -23,6 +22,17 @@ const AdminSidebar = () => {
      {path: "/admin/reports", name: "Reports", icon: MessageCircleWarning},
      {path: "/admin/moderatorContentModeration", name: "Content Moderation", icon: Workflow}
   ]
+
+   function useIsClinet() {
+      return useSyncExternalStore(
+        () => () => {},
+        () => true,
+        () => false,
+      );
+    }
+  
+    const isClient = useIsClinet();
+    if (!isClient) return null;
   return (
     <>
     <div className=" flex-col pt-12 fixed left-0 top-0 ">
@@ -39,7 +49,7 @@ const AdminSidebar = () => {
           <Collapsible defaultOpen>
             <CollapsibleContent>
 
-              {role === "admin" && adminSidebarMenu.map((item) => {
+              {isClient && role === "admin" && adminSidebarMenu.map((item) => {
                 const isActive = pathname === item.path;
                 return (
                   <Link
@@ -55,7 +65,7 @@ const AdminSidebar = () => {
                 );
               })}
 
-               {role === "moderator" && moderatorSidebarMenu.map((item) => {
+               {isClient && role === "moderator" && moderatorSidebarMenu.map((item) => {
                 const isActive = pathname === item.path;
                 return (
                   <Link
@@ -74,7 +84,7 @@ const AdminSidebar = () => {
           </Collapsible>
         </div>
 
-        <Button variant="destructive" onClick={()=> logoutUser()} className="w-full text-center"><LogOut /></Button>
+       
 
        
       </div>

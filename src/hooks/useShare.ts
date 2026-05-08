@@ -22,7 +22,7 @@ export const useShare = () => {
           title: `Check out ${authorName || 'this'}'s ${type === 'video' ? 'reel' : 'post'}`,
           url: shareUrl,
         });
-      } catch (err: unknown) {
+      } catch  {
         console.log("User cancelled share");
       }
     } else {
@@ -30,7 +30,7 @@ export const useShare = () => {
       try {
         await navigator.clipboard.writeText(shareUrl);
         toast.success("Link copied! Paste it anywhere.");
-      } catch (err) {
+      } catch {
         toast.error("Failed to copy link");
       }
     }

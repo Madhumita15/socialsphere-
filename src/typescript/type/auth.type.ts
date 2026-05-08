@@ -63,6 +63,7 @@ export type AuthType = {
   role: string,
   token: string,
   user: ProfileType
+  status: string
 }
 
 
@@ -80,6 +81,7 @@ export type AuthStore = {
   token: string | null;
   role: string | null;
   user: ProfileType | null;
+  status: string | null;
   registerUser: (data: RegisterFormType) => Promise<RegisterResponse>;
   loginUser: (data: LoginFormType) => Promise<LoginResponse>;
   userProfile: ({

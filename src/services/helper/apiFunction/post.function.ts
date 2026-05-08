@@ -14,13 +14,18 @@ export const getAllPost = async (currentUserId?: string) => {
         avatar_url
       ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
       )
-      .eq("likes.user_id", currentUserId).eq("bookmark.user_id", currentUserId)
+      .eq("likes.user_id", currentUserId)
+      .eq("bookmark.user_id", currentUserId)
+      .eq("is_deleted", false)
+      .order("is_pinned", {ascending: false})
+      .order("trending_score", {ascending: false})
+      .order("created_at", {ascending: false})
     if (getPostError) throw getPostError;
     console.log("getPostData", getPostData);
     const postsWithLikeStatus = getPostData.map((post) => ({
       ...post,
       user_has_liked: (post.user_has_liked?.length ?? 0) > 0,
-      isSaved: !!(post.isSaved.length ?? 0 > 0)
+      isSaved: !!(post.isSaved.length ?? 0 > 0),
     }));
     console.log("postwithlikestatus", postsWithLikeStatus);
     return {
@@ -60,21 +65,28 @@ export const infinityPost = async ({
         avatar_url
       ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
       )
-      .eq("likes.user_id", userId).eq("bookmark.user_id", userId);
+      //equality means security filter
+      .eq("likes.user_id", userId)
+      .eq("bookmark.user_id", userId)
+      .eq("visibility", "public")
+      .eq("is_deleted", false);
 
     if (media_type) {
       query = query.eq("media_type", media_type);
     }
 
     const { data: getScrollData, error: getScrollError } = await query
-      .order("created_at", { ascending: false })
+      //sorting algorithm
+      .order("is_pinned", { ascending: false })// Pinned (true) comes before Unpinned (false)
+      .order("trending_score", { ascending: false })// High score comes before low score
+      .order("created_at", { ascending: false })// Newest comes before oldest
       .range(from, to)
       .abortSignal(signal);
     if (getScrollError) throw getScrollError;
     const formattedData = getScrollData?.map((post) => ({
       ...post,
       user_has_liked: post.user_has_liked && post.user_has_liked.length > 0,
-      isSaved: !!(post.isSaved.length && post.isSaved.length > 0)
+      isSaved: !!(post.isSaved.length && post.isSaved.length > 0),
     }));
 
     return {
@@ -88,11 +100,6 @@ export const infinityPost = async ({
     };
   }
 };
-
-
-
-
-
 
 export const getPostById = async ({
   id,
@@ -114,13 +121,14 @@ export const getPostById = async ({
       .eq("likes.user_id", userId)
       .eq("id", id)
       .eq("bookmark.user_id", userId)
-      // .single();
+      .eq("is_deleted", false);
+    // .single();
     if (getPostError) throw getPostError;
     console.log("getPostData", getPostData);
     const formattedData = getPostData?.map((post) => ({
       ...post,
       user_has_liked: post.user_has_liked && post.user_has_liked.length > 0,
-      isSaved: !!(post.isSaved.length && post.isSaved.length > 0)
+      isSaved: !!(post.isSaved.length && post.isSaved.length > 0),
     }));
     return {
       success: true,
@@ -277,6 +285,3 @@ export const deletePost = async (id: string, user: ProfileType) => {
     };
   }
 };
-
-
-

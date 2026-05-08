@@ -92,7 +92,7 @@ const Login = () => {
               <Button
                 disabled={loading}
                 type="submit"
-                className="w-full h-12 font-bold text-white text-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-xl"
+                className="cursor-pointer w-full h-12 font-bold text-white text-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-xl"
                 style={{
                   background:
                     "linear-gradient(90deg, #D493FF 0%, #FF7354 100%)",
@@ -112,7 +112,7 @@ const Login = () => {
               <Button
               onClick={()=> googleLogin()}
                 variant="outline"
-                className="w-full h-11 bg-transparent border-zinc-800 text-zinc-300 hover:bg-zinc-900 hover:text-white hover:border-zinc-600 transition-all duration-300 flex gap-2"
+                className="cursor-pointer w-full h-11 bg-transparent border-zinc-800 text-zinc-300 hover:bg-zinc-900 hover:text-white hover:border-zinc-600 transition-all duration-300 flex gap-2"
               >
                 Google
               </Button>
@@ -121,7 +121,7 @@ const Login = () => {
                 Dont have an account?{" "}
                 <Link
                   href="/register"
-                  className="font-bold transition-colors hover:opacity-80 underline-offset-8"
+                  className="cursor-pointer font-bold transition-colors hover:opacity-80 underline-offset-8"
                   style={{
                     background:
                       "linear-gradient(90deg, #D493FF 0%, #FF7354 100%)",

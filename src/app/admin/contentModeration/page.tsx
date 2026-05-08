@@ -1,153 +1,81 @@
-'use client'
-
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-
-const moderationCards = [
-  {
-    id: 1,
-    title: "Cyber Harassment Case",
-    description: "User reported inappropriate comments targeting another member of the community.",
-    reportType: "Harassment",
-    reportColor: "border-red-500/50 text-red-400",
-    priority: "High Priority",
-    priorityColor: "bg-orange-500",
-    reporter: "John Doe",
-    reporterSeed: "1",
-  },
-  {
-    id: 2,
-    title: "Spam Content Report",
-    description: "Multiple users reported spam links in this post promoting external services.",
-    reportType: "Spam",
-    reportColor: "border-blue-500/50 text-blue-400",
-    priority: "Normal Priority",
-    priorityColor: "bg-gray-500",
-    reporter: "Sarah Anderson",
-    reporterSeed: "2",
-  },
-  {
-    id: 3,
-    title: "Explicit Content Review",
-    description: "Post contains explicit material flagged by automatic detection system.",
-    reportType: "Explicit",
-    reportColor: "border-pink-500/50 text-pink-400",
-    priority: "Critical",
-    priorityColor: "bg-red-500",
-    reporter: "Mike Patterson",
-    reporterSeed: "3",
-  },
-]
+"use client";
+import  { useState } from "react";
+import { Input } from "@/components/ui/input";
+import {  Search } from "lucide-react";
+import {
+  useAdminGetALLPostWithoutPagination,
+} from "@/hooks/useAdminModeration";
+import ContentStats from "@/components/adminContentControl/ContentStats";
+import AdminContentControlTable from "@/components/adminContentControl/AdminContentControlTable";
+import AdminContentPagination from "@/components/adminContentControl/AdminContentPagination";
 
 const ContentModeration = () => {
+  const [page, setPage] = useState(0);
+  const [limit] = useState(5);
+  const [search, setSearch] = useState("");
+ 
+  // console.log(posts);
+ 
+  const { data: allPostData, isLoading } = useAdminGetALLPostWithoutPagination();
+  const totalActivePost = allPostData?.filter(
+    (post) => post.visibility === "public",
+  ).length;
+  const totalPinnedContent = allPostData?.filter(
+    (post) => post.is_pinned === true,
+  ).length;
+  const removeContent = allPostData?.filter(
+    (post) => post.is_deleted === true,
+  ).length;
+
+  
+
+  
+
   return (
     <>
-     <div className="min-h-screen bg-[#151515] text-white">
-      {/* Main Container */}
-      <div className="flex">
-        {/* Left Sidebar - Filters */}
-        <div className="w-64 bg-black border-r border-gray-800 p-6">
-          <h2 className="text-xl font-bold mb-6">Filters</h2>
-
-          {/* Priority Level Section */}
-          <div className="mb-8">
-            <h3 className="text-sm font-semibold text-gray-400 mb-4">Priority Level</h3>
-            <div className="space-y-2">
-              <Button variant="destructive" className="w-full justify-start gap-3 border-gray-700 text-white">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <span className="text-sm">Critical</span>
-              </Button>
-              <Button variant="destructive" className="w-full justify-start gap-3 border-gray-700 text-white">
-                <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                <span className="text-sm">High</span>
-              </Button>
-              <Button variant="destructive" className="w-full justify-start gap-3 border-gray-700 text-white">
-                <div className="w-3 h-3 rounded-full bg-gray-500"></div>
-                <span className="text-sm">Normal</span>
-              </Button>
-            </div>
+      <div className="min-h-screen bg-[#0A0A0A] text-white p-8">
+        {/* Dashboard Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Content Control
+            </h1>
+            <p className="text-gray-400 mt-1">
+              Super Admin Overview: Pin, Boost, and Sanitize Global Feed
+            </p>
           </div>
 
-          {/* Report Type Section */}
-          <div className="mb-8">
-            <h3 className="text-sm font-semibold text-gray-400 mb-4">Report Type</h3>
-            <div className="space-y-3">
-              <Button variant="default" className="w-full justify-center rounded-2xl border-purple-300 text-white">All Types</Button>
-              <Button variant="default" className="w-full justify-center rounded-2xl border-purple-300 text-white">Spam</Button>
-              <Button variant="default" className="w-full justify-center rounded-2xl border-purple-300 text-white">Harassment</Button>
-              <Button variant="default" className="w-full justify-center rounded-2xl border-purple-300 text-white">Explicit Content</Button>
+          <div className="flex items-center gap-3">
+            <div className="relative w-64">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+              <Input
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setSearch(e.target.value);
+                }}
+                placeholder="Search posts or users..."
+                className="bg-black border-gray-800 pl-9 focus-visible:ring-purple-500"
+              />
             </div>
-          </div>
-
-          {/* Progress Section */}
-          <div className="border-t border-gray-800 pt-6">
-            <h3 className="text-sm font-semibold text-gray-400 mb-4">Progress</h3>
-            <p className="text-sm text-gray-300 mb-3">Resolved 24 cases</p>
-            <Progress value={60}  className="h-2 " />
           </div>
         </div>
 
-        {/* Main Content Area */}
-        <div className="flex-1 p-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Moderation Queue</h1>
-            <p className="text-gray-400">Displaying pending reports requiring attention</p>
-          </div>
+        {/* Stats Overview Quick View */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <ContentStats total={totalActivePost} placeholder="Total Active Post" isLoading={isLoading}/>
+           <ContentStats total={totalPinnedContent} placeholder="Ttoal Pinned Content" isLoading={isLoading} />
+            <ContentStats total={removeContent} placeholder="Total Removals (24h)" isLoading={isLoading}/>
+        </div>
 
-          {/* Cards Grid */}
-          <div className="grid gap-6">
-            {moderationCards.map((card) => (
-              <Card key={card.id} className="bg-black border border-gray-800 p-6 hover:border-purple-500 transition-colors">
-                <div className="flex gap-4">
-                  {/* Thumbnail */}
-                  <div className="w-24 h-24 bg-gray-800 rounded-lg shrink-0"></div>
-
-                  {/* Content */}
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2 text-[#D493FF]">{card.title}</h3>
-                    <p className="text-sm text-gray-400 mb-3">{card.description}</p>
-
-                    {/* Badges */}
-                    <div className="flex gap-2 mb-4">
-                      <Badge variant="outline" className={`${card.reportColor}`}>
-                        {card.reportType}
-                      </Badge>
-                      <div className="flex items-center gap-2 px-2 py-1 border border-gray-700 rounded text-sm">
-                        <div className={`w-2 h-2 rounded-full ${card.priorityColor}`}></div>
-                        <span className='text-red-600'>{card.priority}</span>
-                      </div>
-                    </div>
-
-                    {/* Reporter Info */}
-                    <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-                      <Avatar className="w-6 h-6">
-                        <AvatarImage src={`/images/profile.png=${card.reporterSeed}`} />
-                        <AvatarFallback>{card.reporter.substring(0, 2)}</AvatarFallback>
-                      </Avatar>
-                      <span>Reported by {card.reporter}</span>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-3">
-                      <Button variant="ghost" className="text-sm border-gray-700 text-white">View Details</Button>
-                      <Button className="bg-red-600 hover:bg-red-700 text-white text-sm">Remove</Button>
-                      <Button variant="destructive" className="text-sm border-gray-700 text-white">Keep</Button>
-                      <Button className="bg-purple-600 hover:bg-purple-700 text-white text-sm">Mark Trending</Button>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+        {/* Main Table Container */}
+        <div className="bg-black border border-gray-800 rounded-lg overflow-hidden shadow-2xl">
+          <AdminContentControlTable page={page} limit={limit} search={search} />
+          
+          <AdminContentPagination page={page} limit={limit} setPage={setPage} />
         </div>
       </div>
-    </div>
     </>
-  )
-}
+  );
+};
 
-export default ContentModeration
+export default ContentModeration;

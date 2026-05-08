@@ -29,7 +29,7 @@ export default function PostsGrid({ items, isReels = false }: PostsGridProps) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-      {items?.map((item) => (
+      {items && items?.map((item) => (
         <div key={item.id} className="relative aspect-square bg-[#262626] overflow-hidden group">
           {item.media_type === 'image' ? (
             <Image

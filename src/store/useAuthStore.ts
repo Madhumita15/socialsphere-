@@ -15,6 +15,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   token: (getCookie("token") as string) || null,
   role: (getCookie("role") as string) || null,
   user: getCookie("user") ? JSON.parse(getCookie("user") as string) : null,
+  status: (getCookie("status") as string)|| null,
   registerUser: async (data: RegisterFormType) => {
     set({ loading: true, error: null });
     try {
@@ -76,12 +77,16 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         setCookie("user", JSON.stringify(profileData), {
           maxAge: 60 * 60 * 14 * 7,
         });
+        setCookie("status", profileData.status,{
+          maxAge: 60 * 60 * 14 * 7
+        })
         set({
           loading: false,
           error: null,
           role: profileData.role,
           token: authData.session.access_token,
           user: profileData,
+          status: profileData.status
         });
 
         return {
@@ -162,6 +167,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
           bio: bio,
           avatar_url: imageurl || metadata?.avatar_url || "",
           role: "user",
+          status: "active",
           auth_user_id: userData?.user?.id,
         })
         .select("*")
@@ -174,11 +180,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         setCookie("role", profileData.role, {
           maxAge: 60 * 60 * 14 * 7,
         });
+        setCookie("status", profileData.status, {
+          maxAge: 60 * 60 * 14 * 7
+        })
         set({
           loading: false,
           error: null,
           role: profileData.role,
           user: profileData,
+          status: profileData.status
         });
       }
 
@@ -318,20 +328,23 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  setAuth: ({ token, user, role }) => {
+  setAuth: ({ token, user, role, status }) => {
     set({
       token: token,
       user: user,
       role: role,
+      status: status
+
     });
   },
 
   logoutUser: async () => {
     await supabase.auth.signOut();
-    set({ token: null, role: null, user: null });
+    set({ token: null, role: null, user: null, status: null });
     deleteCookie("role");
     deleteCookie("token");
     deleteCookie("user");
+    deleteCookie("status")
     window.location.href = "/login";
   },
 }));

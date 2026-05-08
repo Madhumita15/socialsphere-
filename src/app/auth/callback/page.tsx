@@ -35,10 +35,12 @@ const CallbackPage = () => {
       if (profileData) {
         setCookie("role", profileData.role);
         setCookie("user", JSON.stringify(profileData));
+        setCookie("status", profileData.status)
         setAuth({
           token: session.access_token,
           user: profileData,
           role: profileData.role,
+          status: profileData.status
         });
         router.push("/user/home");
       } else {

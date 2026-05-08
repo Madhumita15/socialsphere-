@@ -11,7 +11,7 @@ export const useToggleLike = ()=>{
     return useMutation({
         mutationKey: ["toggleLike"],
         mutationFn: (post_id: string)=> toggleLike({user: user!, post_id: post_id}),
-        onSuccess: (res, post_id)=>{
+        onSuccess: ( post_id)=>{
              queryClient.invalidateQueries({queryKey: ["getpost", user?.auth_user_id]})
              queryClient.invalidateQueries({queryKey: ["inifinitypost"]})
              queryClient.invalidateQueries({queryKey: ["getpostbyid", post_id]})
