@@ -12,6 +12,8 @@ import { useToggleLike } from "@/hooks/useLike";
 import { FeedCardProps } from "@/typescript/interface/post.interface";
 import { useShare } from "@/hooks/useShare";
 import { useBookMark } from "@/hooks/useBookMark";
+import { useState } from "react";
+import { ReportDialog } from "@/components/userReports/ReportDialog";
 
 
 const FeedCard: React.FC<FeedCardProps> = ({
@@ -29,6 +31,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
   id,
   isSaved
 }) => {
+   const [open, setOpen] = useState(false)
   const { user } = useAuthStore();
   const { mutate: followMutate, isPending } = useCreateFollow();
   const { data } = useGetFollow(userId);
@@ -153,8 +156,9 @@ const FeedCard: React.FC<FeedCardProps> = ({
         {/* Engagement Stats & Description */}
         <div className="px-4 py-3 space-y-2">
           {/* Likes Count */}
-          <div className="flex gap-4 items-center">
-            <p className="text-white font-semibold text-sm">
+          <div className="flex justify-between   items-center">
+            <div className="flex items-center gap-4">
+              <p className="text-white font-semibold text-sm">
               {likes} likes
             </p>
             {user?.auth_user_id !== userId && (
@@ -168,7 +172,18 @@ const FeedCard: React.FC<FeedCardProps> = ({
                 {isPending ? "..." : data ? "Unfollow" : "Follow"}
               </Button>
             )}
+            
+            </div>
+            {
+              user?.auth_user_id !== userId && (
+                <Button variant={"destructive"} className={"cursor-pointer px-3"} onClick={()=> setOpen(true)}>Report</Button>
+              )
+            }
+            
+            
+
           </div>
+          <ReportDialog open={open} setOpen={setOpen} userId={user?.auth_user_id} postId={id} type="post"/>
 
           {/* Description */}
           <div>

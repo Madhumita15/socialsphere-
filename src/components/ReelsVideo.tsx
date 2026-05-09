@@ -9,6 +9,8 @@ import { useToggleLike } from "@/hooks/useLike";
 import { useRouter } from "next/navigation";
 import { useShare } from "@/hooks/useShare";
 import { useBookMark } from "@/hooks/useBookMark";
+import { useState } from "react";
+import { ReportDialog } from "./userReports/ReportDialog";
 
 interface ReelsVideoProps {
   username: string;
@@ -44,6 +46,8 @@ export function ReelsVideo({
   const router = useRouter();
   const { handleShare } = useShare();
   const { mutate: bookMarkMutate } = useBookMark();
+  const [open, setOpen] = useState(false)
+
 
   return (
     <div
@@ -91,19 +95,31 @@ export function ReelsVideo({
             </p>
           </div>
 
-          <div>
+          <div >
             {user?.auth_user_id !== userId && (
               <Button
                 variant={data ? "destructive" : "outline"}
                 className={`cursor-pointer px-3 transition-all ${data ? "bg-[#262626] text-white" : "bg-black text-white"}`}
-                onClick={() => followMutate(userId)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  followMutate(userId)}
+                }
                 disabled={isPending}
               >
                 {isPending ? "..." : data ? "Unfollow" : "Follow"}
               </Button>
             )}
           </div>
+           {
+              user?.auth_user_id !== userId && (
+                <Button variant={"destructive"} className={"cursor-pointer px-3"} onClick={(e)=> {
+                  e.stopPropagation()
+                  setOpen(true)
+                }}>Report</Button>
+              )
+            }
         </div>
+        <ReportDialog open={open} setOpen={setOpen} userId={user?.auth_user_id} postId={id} type="post"/>
         <p className="text-white font-semibold text-xs sm:text-sm">
           {username}
         </p>

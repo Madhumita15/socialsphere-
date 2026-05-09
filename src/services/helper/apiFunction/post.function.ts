@@ -5,21 +5,36 @@ import { PostFormType } from "@/typescript/type/post.type";
 
 export const getAllPost = async (currentUserId?: string) => {
   try {
-    const { data: getPostData, error: getPostError } = await supabase
+
+    // 1. First, get a list of post IDs this user has reported
+    const { data: reportedPosts } = await supabase
+      .from("reports")
+      .select("target_post_id")
+      .eq("reporter_id", currentUserId);
+
+    const reportedIds = reportedPosts?.map((r) => r.target_post_id) || [];
+
+    let query = supabase
       .from("posts")
       .select(
         `*,author:profile(
         fullname,
         username,
         avatar_url
-      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
+      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`
       )
       .eq("likes.user_id", currentUserId)
       .eq("bookmark.user_id", currentUserId)
       .eq("is_deleted", false)
-      .order("is_pinned", {ascending: false})
-      .order("trending_score", {ascending: false})
-      .order("created_at", {ascending: false})
+      .order("is_pinned", { ascending: false })
+      .order("trending_score", { ascending: false })
+      .order("created_at", { ascending: false });
+
+    // 3. Exclude reported IDs using the 'not.in' filter
+    if (reportedIds.length > 0) {
+      query = query.not("id", "in", `(${reportedIds.join(",")})`);
+    }
+    const { data: getPostData, error: getPostError } = await query;
     if (getPostError) throw getPostError;
     console.log("getPostData", getPostData);
     const postsWithLikeStatus = getPostData.map((post) => ({
@@ -56,6 +71,15 @@ export const infinityPost = async ({
     const from = (pageParam - 1) * pageSize;
     const to = pageParam * pageSize - 1;
 
+    // 1. Fetch reported IDs
+    const { data: reported } = await supabase
+      .from("reports")
+      .select("target_post_id")
+      .eq("reporter_id", userId);
+    
+    const reportedIds = reported?.map(r => r.target_post_id) || [];
+    
+
     let query = supabase
       .from("posts")
       .select(
@@ -63,7 +87,7 @@ export const infinityPost = async ({
         fullname,
         username,
         avatar_url
-      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
+      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)` // Removed the extra ) here
       )
       //equality means security filter
       .eq("likes.user_id", userId)
@@ -71,15 +95,21 @@ export const infinityPost = async ({
       .eq("visibility", "public")
       .eq("is_deleted", false);
 
+      
+    if (reportedIds.length > 0) {
+      query = query.not("id", "in", `(${reportedIds.join(",")})`);
+    }
+
+
     if (media_type) {
       query = query.eq("media_type", media_type);
     }
 
     const { data: getScrollData, error: getScrollError } = await query
       //sorting algorithm
-      .order("is_pinned", { ascending: false })// Pinned (true) comes before Unpinned (false)
-      .order("trending_score", { ascending: false })// High score comes before low score
-      .order("created_at", { ascending: false })// Newest comes before oldest
+      .order("is_pinned", { ascending: false }) // Pinned (true) comes before Unpinned (false)
+      .order("trending_score", { ascending: false }) // High score comes before low score
+      .order("created_at", { ascending: false }) // Newest comes before oldest
       .range(from, to)
       .abortSignal(signal);
     if (getScrollError) throw getScrollError;
