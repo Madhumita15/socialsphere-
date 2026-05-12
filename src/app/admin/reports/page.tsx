@@ -45,7 +45,7 @@ export default function ModeratorReports() {
     console.log(selectedReport)
 
   return (
-    <div className="pl-64 bg-[#0A0A0A] min-h-screen p-8 text-white font-sans selection:bg-purple-500/30">
+    <div className=" bg-[#0A0A0A] min-h-screen p-8 text-white font-sans selection:bg-purple-500/30">
       
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">

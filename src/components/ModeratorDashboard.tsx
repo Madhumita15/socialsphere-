@@ -17,7 +17,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
   
 
   return (
-    <div className="pl-64 bg-[#151515] min-h-screen p-8 text-white">
+    <div className=" bg-[#151515] min-h-screen p-8 text-white">
       <h2 className="text-3xl font-bold mb-8">System <span className="text-[#D493FF]">Overview</span></h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">

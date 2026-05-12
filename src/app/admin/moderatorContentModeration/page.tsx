@@ -24,7 +24,7 @@ export default function ContentModerationPage() {
   } = useApproveModeratorFlaggedControl();
 
   return (
-    <div className="pl-64 bg-[#151515] min-h-screen p-8 text-white">
+    <div className=" bg-[#151515] min-h-screen p-8 text-white">
       <div className="mb-10">
         <h1 className="text-3xl font-black text-[#D493FF] flex items-center gap-3">
           <ShieldAlert size={32} />
