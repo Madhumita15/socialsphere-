@@ -1,5 +1,6 @@
 import SingleReel from "@/components/SingleReel";
 import { getPostById } from "@/services/helper/apiFunction/post.function";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { Metadata } from "next";
 
 type Props = {
@@ -32,6 +33,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 
-export default async function Page() {
-  return <SingleReel /> 
+export default async function Page({params}: Props) {
+  const {id }= await params;
+  const queryClient = new QueryClient()
+  await queryClient.prefetchQuery({
+    queryKey: ["post", id],
+    queryFn: ()=> getPostById({id, userId: undefined})
+  })
+  
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <SingleReel /> 
+    </HydrationBoundary>
+  ) 
 }
