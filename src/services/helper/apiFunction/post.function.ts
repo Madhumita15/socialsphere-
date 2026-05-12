@@ -138,22 +138,25 @@ export const getPostById = async ({
   userId: string | undefined;
 }) => {
   try {
-    const { data: getPostData, error: getPostError } = await supabase
+    let query = supabase
       .from("posts")
-      .select(
-        `*, author:profile(
-        fullname,
-        username,
-        avatar_url
-      ),user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
-      )
-      .eq("likes.user_id", userId)
+      .select(`
+        *, 
+        author:profile(fullname, username, avatar_url),
+        user_has_liked:likes!left(id), 
+        isSaved:bookmark!left(id)
+      `)
       .eq("id", id)
-      .eq("bookmark.user_id", userId)
       .eq("is_deleted", false);
-    // .single();
+
+    // ONLY filter likes/bookmarks if a userId actually exists
+    if (userId) {
+      query = query.eq("likes.user_id", userId).eq("bookmark.user_id", userId);
+    }
+
+    const { data: getPostData, error: getPostError } = await query;
+
     if (getPostError) throw getPostError;
-    console.log("getPostData", getPostData);
     const formattedData = getPostData?.map((post) => ({
       ...post,
       user_has_liked: post.user_has_liked && post.user_has_liked.length > 0,

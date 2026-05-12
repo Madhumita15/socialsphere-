@@ -11,6 +11,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   
+  
   const res = await getPostById({ id, userId: undefined });
   const post = res?.formattedData?.[0]; 
   console.log("post", post)
