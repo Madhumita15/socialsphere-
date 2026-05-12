@@ -2,7 +2,14 @@
 
 import TextType from "@/components/TextType";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Bell, ChevronDown, LogOut, User } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Bell,
+  ChevronDown,
+  LogOut,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,7 +24,7 @@ const UserNavbar = () => {
     return useSyncExternalStore(
       () => () => {},
       () => true,
-      () => false
+      () => false,
     );
   }
 
@@ -35,18 +42,29 @@ const UserNavbar = () => {
 
       {/* DESKTOP NAVBAR */}
       <div className="pr-12 pl-12 justify-between flex-row pt-3 hidden md:flex z-50 relative">
-        <div className="pt-3 relative">
-          <h1 className="text-2xl pl-10 font-bold">
-            <TextType
-              className="bg-linear-to-r from-[#D493FF] to-[#bb2b0b] bg-clip-text text-transparent"
-              text={[`Welcome ${user?.fullname || ""}`]}
-              typingSpeed={75}
-              pauseDuration={1500}
-              showCursor
-              cursorCharacter="_"
-              deletingSpeed={50}
-            />
-          </h1>
+        <div className="flex flex-row items-center justify-center">
+          <div className="pt-3">
+            <button
+              onClick={() => router.back()}
+              className="flex flex-row gap-2 text-[#D493FF] items-center justify-center cursor-pointer"
+            >
+              <ArrowLeft />
+              Go Back
+            </button>{" "}
+          </div>
+          <div className="pt-3 relative">
+            <h1 className="text-2xl pl-10 font-bold">
+              <TextType
+                className="bg-linear-to-r from-[#D493FF] to-[#bb2b0b] bg-clip-text text-transparent"
+                text={[`Welcome ${user?.fullname || ""}`]}
+                typingSpeed={75}
+                pauseDuration={1500}
+                showCursor
+                cursorCharacter="_"
+                deletingSpeed={50}
+              />
+            </h1>
+          </div>
         </div>
 
         <div className="flex items-center gap-3 sm:gap-5 relative z-50">
@@ -83,7 +101,9 @@ const UserNavbar = () => {
           {isOpen && (
             <div className="absolute right-0 top-12 w-56 sm:w-64 bg-[#18181B] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
               <div className="p-4 border-b border-white/10 bg-white/5">
-                <p className="text-sm font-bold text-white truncate">{user?.fullname}</p>
+                <p className="text-sm font-bold text-white truncate">
+                  {user?.fullname}
+                </p>
                 <p className="text-xs text-[#A1A1AA] truncate">{user?.email}</p>
               </div>
               <div className="p-2">
@@ -156,8 +176,12 @@ const UserNavbar = () => {
             {isOpen && (
               <div className="absolute right-0 top-12 w-56 sm:w-64 bg-[#18181B] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
                 <div className="p-4 border-b border-white/10 bg-white/5">
-                  <p className="text-sm font-bold text-white truncate">{user?.fullname}</p>
-                  <p className="text-xs text-[#A1A1AA] truncate">{user?.email}</p>
+                  <p className="text-sm font-bold text-white truncate">
+                    {user?.fullname}
+                  </p>
+                  <p className="text-xs text-[#A1A1AA] truncate">
+                    {user?.email}
+                  </p>
                 </div>
                 <div className="p-2">
                   <Link

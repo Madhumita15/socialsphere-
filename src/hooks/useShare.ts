@@ -13,7 +13,7 @@ export const useShare = () => {
     e.stopPropagation();
 
     // 2. The Link we are sending (Dynamic based on type)
-    const shareUrl = `${window.location.origin}/user/${type === "video" ? "reel" : "post"}/${id}`;
+    const shareUrl = `${window.location.origin}/user/reels/${id}`;
 
     if (navigator.share) {
       // Mobile Flow
