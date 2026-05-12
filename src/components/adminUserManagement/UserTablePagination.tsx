@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button";
 import { useGetAllUser } from "@/hooks/useAdminUserMnagement";
 import { UserTablePaginationType } from "@/typescript/type/adminUserManagement.type";
 
-
-
 const UserTablePagination:React.FC<UserTablePaginationType> = ({ page, limit, setPage }) => {
   const { data: getAllUsers } = useGetAllUser({ page, limit });
   const totalCount = getAllUsers?.count ?? 0;

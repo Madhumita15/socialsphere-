@@ -5,7 +5,7 @@ export const getAllUser = async ({page, limit}: {page: number, limit: number}) =
   const to = from + limit - 1;
   const { data: allUserData, error: allUserError, count } = await supabase
     .from("profile")
-    .select("*", {count: "exact"})
+    .select("*", {count: "exact"}).neq("role", "admin")
     .order("created_at", { ascending: false }).range(from, to);
   if (allUserError) throw allUserError;
   console.log(allUserData);

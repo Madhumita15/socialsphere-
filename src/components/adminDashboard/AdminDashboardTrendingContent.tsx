@@ -10,7 +10,7 @@ const AdminDashboardTrendingContent = () => {
     isError: simpleTrendingIsError,
     isLoading: simpleTrendingIsLoading,
   } = useSimpleTrending();
-
+console.log("simpletrendingData", simpleTrendingData)
   return (
     <>
       <Card className="bg-black border border-gray-800 p-6">

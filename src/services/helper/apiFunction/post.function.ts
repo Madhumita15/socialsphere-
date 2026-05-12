@@ -5,11 +5,11 @@ import { PostFormType } from "@/typescript/type/post.type";
 
 export const getAllPost = async (currentUserId?: string) => {
   try {
-
     // 1. First, get a list of post IDs this user has reported
     const { data: reportedPosts } = await supabase
       .from("reports")
       .select("target_post_id")
+      .eq("status", "pending")
       .eq("reporter_id", currentUserId);
 
     const reportedIds = reportedPosts?.map((r) => r.target_post_id) || [];
@@ -21,7 +21,7 @@ export const getAllPost = async (currentUserId?: string) => {
         fullname,
         username,
         avatar_url
-      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`
+      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
       )
       .eq("likes.user_id", currentUserId)
       .eq("bookmark.user_id", currentUserId)
@@ -75,10 +75,10 @@ export const infinityPost = async ({
     const { data: reported } = await supabase
       .from("reports")
       .select("target_post_id")
+      .eq("status", "pending")
       .eq("reporter_id", userId);
-    
-    const reportedIds = reported?.map(r => r.target_post_id) || [];
-    
+
+    const reportedIds = reported?.map((r) => r.target_post_id) || [];
 
     let query = supabase
       .from("posts")
@@ -87,19 +87,18 @@ export const infinityPost = async ({
         fullname,
         username,
         avatar_url
-      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)` // Removed the extra ) here
+      ), user_has_liked:likes!left(id), isSaved:bookmark!left(id)`,
       )
+
       //equality means security filter
       .eq("likes.user_id", userId)
       .eq("bookmark.user_id", userId)
       .eq("visibility", "public")
       .eq("is_deleted", false);
 
-      
     if (reportedIds.length > 0) {
       query = query.not("id", "in", `(${reportedIds.join(",")})`);
     }
-
 
     if (media_type) {
       query = query.eq("media_type", media_type);
@@ -217,15 +216,11 @@ export const createPost = async ({
       .single();
     if (postError) throw postError;
 
-    const { data: profileData, error: profileError } = await supabase
-      .from("profile")
-      .update({
-        post_count: (user.post_count || 0) + 1,
-      })
-      .eq("auth_user_id", user.auth_user_id);
+    const { error: profileError } = await supabase.rpc("increment_post_count", {
+      p_user_id: user?.auth_user_id,
+    });
+
     if (profileError) throw profileError;
-    console.log("profileData", profileData);
-    console.log("postData", postData);
     useAuthStore.getState().refreshUser();
     return {
       success: true,

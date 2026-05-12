@@ -11,10 +11,8 @@ export const useUserReport = ()=>{
         mutationFn: (data:ReportNewDataType)=> userReport(data),
         onSuccess: (res)=> {
             console.log("res", res)
-            queryClient.resetQueries({queryKey: ["getpost", user?.auth_user_id]})
-            queryClient.resetQueries({queryKey: ["inifinitypost"]})
-
-            queryClient.invalidateQueries({queryKey: ["infinityPost"]})
+            queryClient.invalidateQueries({queryKey: ["getpost", user?.auth_user_id]})
+            queryClient.invalidateQueries({queryKey: ["inifinitypost"]})
 
 
         }

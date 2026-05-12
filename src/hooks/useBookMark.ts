@@ -22,7 +22,7 @@ export const useBookMark = () => {
     mutationKey: ["createBookmark"],
     mutationFn: (post_id: string) =>
       createAndDeleteBookmark({ user: user!, post_id: post_id }),
-    onSuccess: (post_id) => {
+    onSuccess: (_data, post_id) => {
       queryClient.invalidateQueries({
         queryKey: ["getpost", user?.auth_user_id],
       });

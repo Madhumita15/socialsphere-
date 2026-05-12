@@ -35,7 +35,7 @@ export const useGetPostById = (id: string) => {
   return useQuery({
     queryKey: ["getpostbyid", id, userId],
     queryFn: () => getPostById({id, userId}),
-    enabled: !!id,
+    enabled: !!id && !!userId,
   });
 };
 

@@ -29,6 +29,7 @@ export const usePostAction = ()=>{
             queryClient.invalidateQueries({queryKey: ["getpostbyid"]})
             queryClient.invalidateQueries({queryKey: ["infinitypost"]})
             queryClient.invalidateQueries({queryKey: ["getpost"]})
+            queryClient.invalidateQueries({queryKey: ["get-all-post-without-pagination"]})
 
 
         }

@@ -1,10 +1,8 @@
 "use client";
-import  { useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import {  Search } from "lucide-react";
-import {
-  useAdminGetALLPostWithoutPagination,
-} from "@/hooks/useAdminModeration";
+import { Search } from "lucide-react";
+import { useAdminGetALLPostWithoutPagination } from "@/hooks/useAdminModeration";
 import ContentStats from "@/components/adminContentControl/ContentStats";
 import AdminContentControlTable from "@/components/adminContentControl/AdminContentControlTable";
 import AdminContentPagination from "@/components/adminContentControl/AdminContentPagination";
@@ -13,10 +11,11 @@ const ContentModeration = () => {
   const [page, setPage] = useState(0);
   const [limit] = useState(5);
   const [search, setSearch] = useState("");
- 
+
   // console.log(posts);
- 
-  const { data: allPostData, isLoading } = useAdminGetALLPostWithoutPagination();
+
+  const { data: allPostData, isLoading } =
+    useAdminGetALLPostWithoutPagination();
   const totalActivePost = allPostData?.filter(
     (post) => post.visibility === "public",
   ).length;
@@ -26,10 +25,6 @@ const ContentModeration = () => {
   const removeContent = allPostData?.filter(
     (post) => post.is_deleted === true,
   ).length;
-
-  
-
-  
 
   return (
     <>
@@ -62,15 +57,27 @@ const ContentModeration = () => {
 
         {/* Stats Overview Quick View */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <ContentStats total={totalActivePost} placeholder="Total Active Post" isLoading={isLoading}/>
-           <ContentStats total={totalPinnedContent} placeholder="Ttoal Pinned Content" isLoading={isLoading} />
-            <ContentStats total={removeContent} placeholder="Total Removals (24h)" isLoading={isLoading}/>
+          <ContentStats
+            total={totalActivePost}
+            placeholder="Total Active Post"
+            isLoading={isLoading}
+          />
+          <ContentStats
+            total={totalPinnedContent}
+            placeholder="Ttoal Pinned Content"
+            isLoading={isLoading}
+          />
+          <ContentStats
+            total={removeContent}
+            placeholder="Total Removals (24h)"
+            isLoading={isLoading}
+          />
         </div>
 
         {/* Main Table Container */}
         <div className="bg-black border border-gray-800 rounded-lg overflow-hidden shadow-2xl">
           <AdminContentControlTable page={page} limit={limit} search={search} />
-          
+
           <AdminContentPagination page={page} limit={limit} setPage={setPage} />
         </div>
       </div>

@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Edit2, UserPlus } from "lucide-react";
+import { Edit2, User, UserPlus } from "lucide-react";
 import ProfileDialog from "./ProfileDialog";
 import { ProfileHeaderProps } from "@/typescript/interface/post.interface";
 import {

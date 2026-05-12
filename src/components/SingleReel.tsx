@@ -60,6 +60,7 @@ const SingleReel = () => {
             <Image
               src={singleReelData.media_url}
               alt="img"
+              fill
               className="absolute inset-0 h-full w-full object-cover"
             />
           )}
@@ -166,6 +167,13 @@ const SingleReel = () => {
             {/* Save/Bookmark Button */}
             <div className="flex flex-col items-center gap-1.5">
               <Button
+              onClick={()=>{
+                 if(!user) {
+                  toast.success("Please Login first to save")
+                  return
+                }
+                bookMarkMutate(singleReelData.id)
+              }}
                 variant="ghost"
                 size="icon"
                 className="rounded-full h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 hover:scale-110 transition-transform bg-black/40 hover:bg-black/60"

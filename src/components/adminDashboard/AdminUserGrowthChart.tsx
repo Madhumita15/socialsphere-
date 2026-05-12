@@ -11,6 +11,7 @@ const AdminUserGrowthChart = () => {
     error: growthChartError,
     isLoading: growthChartIsLoading,
   } = useUserGrowth();
+  console.log("growthChartData", growthChartData);
   return (
     <>
       <Card className="bg-black border border-gray-800 p-6">
@@ -26,7 +27,7 @@ const AdminUserGrowthChart = () => {
                 User Growth Over Time
               </h3>
               <Button variant="outline" size="sm" className="text-xs">
-                Last 12 Months
+                Last 6 Months
               </Button>
             </div>
 
@@ -50,6 +51,9 @@ const AdminUserGrowthChart = () => {
                     fillOpacity={1}
                     fill="url(#colorUsers)"
                     strokeWidth={3}
+                    connectNulls={true}
+                    activeDot={{ r: 6 }}
+                    dot={{ r: 4, fill: "#D493FF" }}
                   />
                 </AreaChart>
               </ResponsiveContainer>

@@ -10,7 +10,7 @@ import StatsCard from "./adminDashboard/StatsCard";
 import RecentSignUp from "./adminDashboard/RecentSignUp";
 import AdminDashboardTrendingContent from "./adminDashboard/AdminDashboardTrendingContent";
 import AdminUserGrowthChart from "./adminDashboard/AdminUserGrowthChart";
-import AdminModerationLog from "./adminDashboard/AdminModerationLog";
+
 
 const AdminDasboard = () => {
   const { data: usersPostStats, isLoading: userPostIsLoading } =
@@ -19,6 +19,8 @@ const AdminDasboard = () => {
     useEngagementState();
   const { data: growthData } = useUserGrowthRate();
   const { isLoading: growthChartIsLoading } = useUserGrowth();
+
+  console.log("growthData", growthData)
 
   return (
     <>
@@ -70,12 +72,9 @@ const AdminDasboard = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="">
           {/* Recent Signups */}
           <RecentSignUp />
-
-          {/* Moderation Logs */}
-          <AdminModerationLog />
         </div>
       </div>
     </>

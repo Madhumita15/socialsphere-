@@ -55,4 +55,5 @@ export interface FeedCardProps {
   userId: string;
   user_has_liked: boolean
   isSaved: boolean
+  report_count: number
 }

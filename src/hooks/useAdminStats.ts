@@ -41,7 +41,7 @@ export const useRecentSignUps = ()=>{ // recentusers
     return useQuery({
         queryKey: ["recent-signups"],
         queryFn: async()=>{
-            const {data:recentData, error:recentError} = await supabase.from("profile").select("*").order("created_at", {ascending: false}).limit(5)
+            const {data:recentData, error:recentError} = await supabase.from("profile").select("*").neq("role", "admin").order("created_at", {ascending: false}).limit(5)
             if(recentError) throw recentError
             return recentData
         }
@@ -63,6 +63,7 @@ export const useUserGrowthRate = ()=>{ // previos month users vs cuurent users  
 
           const totalCurrentUser = currentUser.count || 0
           const totalPreviousUser = previousUser.count || 0
+          console.log("user", totalCurrentUser, totalPreviousUser)
           const growthRate = totalPreviousUser === 0 ? 0 : ((totalCurrentUser - totalPreviousUser)/totalPreviousUser * 100)
           return growthRate
           

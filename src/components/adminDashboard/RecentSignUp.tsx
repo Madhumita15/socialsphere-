@@ -6,7 +6,7 @@ import { Skeleton } from "../ui/skeleton";
 
 const RecentSignUp = () => {
   const {
-    data: signUpData,
+    data: signUp,
     isLoading: signupIsLoading,
     isError: signupIsError,
     error: signupError,
@@ -19,7 +19,7 @@ const RecentSignUp = () => {
       () => false,
     );
   }
-
+const signUpData = signUp?.filter((data)=> data.role !== "admin")
   const isClient = useIsClinet();
   if (!isClient) return null;
   return (

@@ -4,6 +4,8 @@ import {
   MessageCircle,
   Share2,
   Bookmark,
+  ShieldAlert,
+  Eye,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -29,7 +31,8 @@ const FeedCard: React.FC<FeedCardProps> = ({
   comments,
   user_has_liked,
   id,
-  isSaved
+  isSaved,
+  report_count
 }) => {
    const [open, setOpen] = useState(false)
   const { user } = useAuthStore();
@@ -38,6 +41,11 @@ const FeedCard: React.FC<FeedCardProps> = ({
   const {mutate: mutateToggle} = useToggleLike()
   const {handleShare} = useShare()
   const {mutate:bookmarkMutate} = useBookMark()
+
+  const [revealed, setRevealed] = useState(false);
+  
+  const isFlagged = report_count >= 5;
+  const shouldHide = isFlagged && !revealed;
 
 
 
@@ -85,12 +93,30 @@ const FeedCard: React.FC<FeedCardProps> = ({
 
         {/* Post Image/Video */}
         <div className="relative w-full aspect-square bg-[#262626] overflow-hidden group">
+          {shouldHide && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 backdrop-blur-xl px-6 text-center transition-all duration-500">
+            <ShieldAlert size={40} className="text-red-500 mb-3 animate-pulse" />
+            <h3 className="text-white font-bold text-sm mb-1">Content Flagged</h3>
+            <p className="text-[#71717A] text-[11px] mb-4">
+              This post has been reported multiple times and is under review for violating community guidelines.
+            </p>
+            <Button 
+              variant="destructive" 
+              size="sm" 
+              className="h-8 text-xs border-zinc-700 hover:bg-zinc-800 text-white gap-2"
+              onClick={() => setRevealed(true)}
+            >
+              <Eye size={14} />
+              Show Anyway
+            </Button>
+          </div>
+        )}
           {mediaType === "image" ? (
             <Image
               src={mediaUrl}
               alt="Post content"
               fill
-              className="object-cover"
+              className={`object-cover, ${shouldHide ? "blur-2xl scale-110 opacity-30" : "blur-0 scale-100 opacity-100"}`}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 500px"
               priority={false}
             />
@@ -98,11 +124,11 @@ const FeedCard: React.FC<FeedCardProps> = ({
             <>
               <video
                 src={mediaUrl}
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover ${shouldHide ? "blur-2xl opacity-30" : "blur-0 opacity-100"}`}
                 controls={false}
                 muted
                 loop
-                autoPlay
+                autoPlay={!shouldHide}
                 playsInline
               />
             </>

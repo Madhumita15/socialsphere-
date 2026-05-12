@@ -1,8 +1,8 @@
 "use client";
 import FeedCard from "@/components/FeedCard";
 import { useInifinityPost } from "@/hooks/usePost";
-import { Loader2, Plus } from "lucide-react";
-import { useEffect } from "react";
+import { Loader2, Plus, User } from "lucide-react";
+import { useEffect, useSyncExternalStore } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { useRecentSignUps } from "@/hooks/useAdminStats";
 import Image from "next/image";
@@ -10,8 +10,9 @@ export default function Home() {
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInifinityPost();
   const posts = data?.pages.flatMap((page) => page.formattedData) || [];
+  console.log("posts", posts)
   const {
-    data: recentSignupData,
+    data: recentSignupDataMain,
     isLoading,
     isError,
     error,
@@ -31,59 +32,24 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchNextPage, hasNextPage]);
+  console.log("recentSignupDataMain", recentSignupDataMain)
 
-  interface Story {
-    id: number;
-    username: string;
-    initials: string;
-    backgroundColor: string;
-    hasStory: boolean;
+
+const recentSignupData = recentSignupDataMain?.filter((user)=> (user.role !== "moderator") && (user.role !== "admin"))
+console.log("recentSignup", recentSignupData)
+
+function useIsClient() {
+    return useSyncExternalStore(
+      () => () => {}, // Empty subscribe function
+      () => true, // Client-side value
+      () => false, // Server-side/Hydration value
+    );
   }
 
-  const stories: Story[] = [
-    {
-      id: 1,
-      username: "Your Story",
-      initials: "+",
-      backgroundColor: "from-[#D493FF] to-[#FF7354]",
-      hasStory: false,
-    },
-    {
-      id: 2,
-      username: "john_doe",
-      initials: "JD",
-      backgroundColor: "from-[#FF7354] to-[#D493FF]",
-      hasStory: true,
-    },
-    {
-      id: 3,
-      username: "sarah_art",
-      initials: "SA",
-      backgroundColor: "from-[#D493FF] to-[#9D4EDD]",
-      hasStory: true,
-    },
-    {
-      id: 4,
-      username: "alex_photo",
-      initials: "AP",
-      backgroundColor: "from-[#FF7354] to-[#FF6B6B]",
-      hasStory: true,
-    },
-    {
-      id: 5,
-      username: "emma_creative",
-      initials: "EC",
-      backgroundColor: "from-[#9D4EDD] to-[#D493FF]",
-      hasStory: true,
-    },
-    {
-      id: 6,
-      username: "mike_travel",
-      initials: "MT",
-      backgroundColor: "from-[#FF6B6B] to-[#FF7354]",
-      hasStory: true,
-    },
-  ];
+  const isClient = useIsClient();
+  if (!isClient) return null;
+
+  
 
   return (
     <>
@@ -98,7 +64,7 @@ export default function Home() {
             <div className="relative p-0.5 rounded-full bg-linear-to-tr from-[#f97316] via-[#d946ef] to-[#a855f7] group-hover:scale-105 transition-transform duration-200">
               <div className="bg-[#121111] p-0.5 rounded-full">
                 <div className="relative w-14 h-14 rounded-full overflow-hidden bg-[#262626] flex items-center justify-center border border-[#262626]">
-                  {user.avatar_url ? (
+                  {isClient && user.avatar_url ? (
                     <Image
                       src={user.avatar_url}
                       alt={user.fullname || "User"}
@@ -109,7 +75,7 @@ export default function Home() {
                     />
                   ) : (
                     <span className="text-white font-bold text-sm uppercase">
-                      {user.fullname?.slice(0, 2)}
+                      { user.fullname?.slice(0, 2)}
                     </span>
                   )}
                 </div>
@@ -126,7 +92,7 @@ export default function Home() {
     </div>
 
       <div className="flex flex-col items-center w-full max-w-2xl mx-auto mt-11">
-        {posts.map((post) => {
+      {posts.map((post) => {
           const name = post.author?.username || "Anonymous";
           return (
             <FeedCard
@@ -146,9 +112,10 @@ export default function Home() {
               userId={post.user_id}
               user_has_liked={post.user_has_liked}
               isSaved={post.isSaved}
+              report_count={post.report_count}
             />
           );
-        })}
+        })} 
       </div>
 
       <div className="flex justify-center py-8">
