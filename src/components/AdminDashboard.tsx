@@ -20,7 +20,7 @@ const AdminDasboard = () => {
   const { data: growthData } = useUserGrowthRate();
   const { isLoading: growthChartIsLoading } = useUserGrowth();
 
-  console.log("growthData", growthData)
+  // console.log("growthData", growthData)
 
   return (
     <>

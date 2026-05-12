@@ -3,19 +3,11 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { memo } from "react";
-import { FieldValues, Path, UseFormRegister } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import { Textarea } from "./ui/textarea";
+import { DynamicInputProps } from "@/typescript/type/dynamicInput.function";
 
-export interface DynamicInputProps<T extends FieldValues> {
-  label: string;
-  name: Path<T>;
-  type?: string;
-  register: UseFormRegister<T>;
-  error?: string;
-  required: boolean;
-  loading: boolean;
-  placeholder: string;
-}
+
 
 const DynamicInput = <T extends FieldValues>({
   label,

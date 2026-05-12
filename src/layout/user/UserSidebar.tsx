@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   LogOut,
   MessageSquare,
-  Plus,
   User,
   Video,
 } from "lucide-react";
@@ -43,14 +42,14 @@ const UserSidebar = () => {
   return (
     <div>
       <div className=" flex-col pt-12 fixed left-0 top-0 hidden md:block">
-        <div className="pr-8 pl-8" style={{ width: "240px", height: "51px" }}>
+        <div className="pr-2 pl-7" style={{ width: "240px", height: "51px" }}>
           <h1
             onClick={() => router.push("/user/home")}
-            className="font-extrabold cursor-pointer font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent"
+            className="font-extrabold flex items-center gap-1 cursor-pointer font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent"
           >
-            SocialSphere+
+           <Image src={"/images/logo.png"} alt="logo" width={25} height={25} /> SocialSphere+
           </h1>
-          <p className="text-[10px] tracking-[2px] leading-3.75 font-normal text-[#71717A]">
+          <p className="text-[10px] pl-8 tracking-[2px] leading-3.75 font-normal text-[#71717A]">
             PREMIUM CURATOR
           </p>
         </div>

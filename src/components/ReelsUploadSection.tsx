@@ -3,10 +3,9 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Video } from 'lucide-react';
+import { ReelUploadSectionProps } from '@/typescript/type/reel.type';
 
-interface ReelUploadSectionProps {
-  onUpload: (file: File) => void;
-}
+
 
 export default function ReelUploadSection({ onUpload }: ReelUploadSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);

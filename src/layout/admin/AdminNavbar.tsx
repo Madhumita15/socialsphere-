@@ -2,7 +2,7 @@
 
 import TextType from "@/components/TextType";
 import { useAuthStore } from "@/store/useAuthStore";
-import { ChevronDown, LogOut, User } from "lucide-react";
+import {  ChevronDown, LogOut, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
@@ -10,6 +10,7 @@ import { useState, useSyncExternalStore } from "react";
 const AdminNavbar = () => {
   const { user, logoutUser } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+ 
 
   function useIsClinet() {
     return useSyncExternalStore(
@@ -25,19 +26,19 @@ const AdminNavbar = () => {
   return (
     <>
       {isClient && user && (
-      <div className="relative ">
-        <h1 className="pt-5 text-2xl pl-10 font-bold">
-          <TextType
-            className=" bg-linear-to-r from-[#D493FF]  to-[#bb2b0b] bg-clip-text text-transparent"
-            text={[`Welcome ${user?.fullname}`]}
-            typingSpeed={75}
-            pauseDuration={1500}
-            showCursor
-            cursorCharacter="_"
-            deletingSpeed={50}
-          />
-        </h1>
-      
+        <div className="relative ">
+          <h1 className="pt-5 text-2xl pl-10  font-bold">
+            <TextType
+              className=" bg-linear-to-r from-[#D493FF]  to-[#bb2b0b] bg-clip-text text-transparent"
+              text={[`Welcome ${user?.fullname} To SocialSphere+ Dashboard`]}
+              typingSpeed={75}
+              pauseDuration={1500}
+              showCursor
+              cursorCharacter="_"
+              deletingSpeed={50}
+            />
+          </h1>
+
           <div className="absolute top-4 right-3 flex flex-row gap-3 items-center">
             <div className="flex items-center gap-3 sm:gap-5 relative z-50">
               <div
@@ -101,9 +102,8 @@ const AdminNavbar = () => {
               )}
             </div>
           </div>
-       
-      </div>
-       )}
+        </div>
+      )}
     </>
   );
 };

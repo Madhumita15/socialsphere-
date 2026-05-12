@@ -5,13 +5,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useGetModeratorReportsById } from "@/hooks/useModeratorReports";
+import { ReviewPostDialogInterface } from "@/typescript/interface/admin.interface";
 import { Eye, Calendar, ShieldAlert } from "lucide-react";
 import Image from "next/image";
 
-export interface ReviewPostDialogInterface {
-  onClose: (open: boolean) => void;
-  report_id: string | null;
-}
+
 
 export function ReviewPostDialog({
   onClose,

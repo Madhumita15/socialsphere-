@@ -12,7 +12,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
   ).length || 0;
   const filteredReportData = reportData?.filter((data)=> data.status === "pending").length || 0
 
-  console.log("trending", trendData)
+  // console.log("trending", trendData)
   
   
 
@@ -42,7 +42,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
           {/* You can map through your categories here */}
           <Bar dataKey="spam" stackId="a" fill="#D493FF" radius={[0, 0, 0, 0]} />
           <Bar dataKey="harassment" stackId="a" fill="#bb2b0b" radius={[0, 0, 0, 0]} />
-          <Bar dataKey="explicit" stackId="a" fill="#4ADE80" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="explicit" stackId="a" fill="#466014" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

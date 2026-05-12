@@ -20,7 +20,7 @@ const CallbackPage = () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      console.log("user goole suthinticate", user);
+      console.log("user goole authinticate", user);
       if (!user || !session) {
         router.push("/login");
         return;

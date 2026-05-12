@@ -1,13 +1,9 @@
-import { LucideIcon } from "lucide-react";
+
 import { Card } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
+import { StatsCardInterface } from "@/typescript/interface/admin.interface";
 
-interface StatsCardInterface {
-  label: string;
-  icon: LucideIcon;
-  totalStats: number | string | undefined;
-  loading: boolean
-}
+
 
 const StatsCard: React.FC<StatsCardInterface> = ({
   label,

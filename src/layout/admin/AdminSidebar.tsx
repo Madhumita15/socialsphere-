@@ -3,11 +3,13 @@
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ChartNoAxesCombined,  LayoutDashboard,  MessageCircleWarning, User,  Workflow } from "lucide-react"
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
 const AdminSidebar = () => {
+  const router = useRouter()
   const pathname = usePathname()
   const { role} = useAuthStore()
   const adminSidebarMenu = [
@@ -36,11 +38,14 @@ const AdminSidebar = () => {
   return (
     <>
     <div className=" flex-col pt-12 fixed left-0 top-0 ">
-        <div className="pr-8 pl-8" style={{ width: "240px", height: "51px" }}>
-          <h1 className="font-extrabold font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent">
-            SocialSphere+
-          </h1>
-          <p className="text-[10px] tracking-[2px] leading-3.75 font-normal text-[#71717A]">
+        <div className="pr-2 pl-8" style={{ width: "240px", height: "51px" }}>
+                  <h1
+                    onClick={() => router.push("/user/home")}
+                    className="font-extrabold flex items-center gap-1 cursor-pointer font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent"
+                  >
+                   <Image src={"/images/logo.png"} alt="logo" width={25} height={25} /> SocialSphere+
+                  </h1>
+          <p className="text-[10px] pl-7 tracking-[2px] leading-3.75 font-normal text-[#71717A]">
             ADMIN CONSOLE
           </p>
         </div>

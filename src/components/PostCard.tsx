@@ -1,16 +1,12 @@
 "use client";
 
+import { PostCardProps } from "@/typescript/type/post.type";
 import { Eye } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 
-interface PostCardProps {
-  id: string;
-  type: "image" | "video";
-  src: string;
- 
-}
+
 
 export function PostCard({ type, src,id }: PostCardProps) {
   const router = useRouter()

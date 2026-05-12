@@ -1,11 +1,8 @@
+import { ShareProps } from "@/typescript/interface/share.interface";
 import { toast } from "sonner";
 
 
-interface ShareProps {
-  id: string;
-  authorName?: string;
-  type: 'image' | 'video'; // To handle both feeds and reels
-}
+
 
 export const useShare = () => {
   const handleShare = async (e: React.MouseEvent, { id, authorName, type }: ShareProps) => {

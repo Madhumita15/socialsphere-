@@ -16,7 +16,7 @@ import { useShare } from "@/hooks/useShare";
 import { useBookMark } from "@/hooks/useBookMark";
 import { useState } from "react";
 import { ReportDialog } from "@/components/userReports/ReportDialog";
-import { useRouter } from "next/navigation";
+
 
 
 const FeedCard: React.FC<FeedCardProps> = ({
@@ -35,7 +35,6 @@ const FeedCard: React.FC<FeedCardProps> = ({
   isSaved,
   report_count
 }) => {
-  const router = useRouter()
    const [open, setOpen] = useState(false)
   const { user } = useAuthStore();
   const { mutate: followMutate, isPending } = useCreateFollow();
@@ -58,7 +57,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
 
   return (
     <>
-      <div className="bg-[#1a1a1a] rounded-lg border border-[#262626] overflow-hidden mb-4 w-full max-w-md mx-auto cursor-pointer" onClick={() => router.push(`reels/${id}`)}>
+      <div className="bg-[#1a1a1a] rounded-lg border border-[#262626] overflow-hidden mb-4 w-full max-w-md mx-auto cursor-pointer" >
         {/* Post Header */}
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
@@ -175,7 +174,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
             bookmarkMutate(id)
           }}
             
-            className="p-2 hover:bg-[#262626] rounded-full transition-colors group"
+            className="p-2 hover:bg-[#262626] cursor-pointer rounded-full transition-colors group"
           >
             <Bookmark
               className={`w-6 h-6 transition-all duration-200 ${
@@ -210,7 +209,9 @@ const FeedCard: React.FC<FeedCardProps> = ({
             </div>
             {
               user?.auth_user_id !== userId && (
-                <Button variant={"destructive"} className={"cursor-pointer px-3"} onClick={()=> setOpen(true)}>Report</Button>
+                <Button variant={"destructive"} className={"cursor-pointer px-3"} onClick={(e)=> {
+                  e.preventDefault()
+                  setOpen(true)}}>Report</Button>
               )
             }
             

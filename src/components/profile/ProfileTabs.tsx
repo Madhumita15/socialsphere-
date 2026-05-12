@@ -18,7 +18,7 @@ export default function ProfileTabs() {
   const {user} = useAuthStore()
   const [open, setOpen] = useState(false);
   const {data:saveData, isLoading:getBookMarkLoading, isError:bookMarkIsError, error:bookmarkError} = useGetBookMark()
-  console.log("saveData", saveData)
+  // console.log("saveData", saveData)
 
   const postOnly = data?.postsWithLikeStatus?.filter(
     (post) => post.media_type === "image" && post.user_id === user?.auth_user_id,

@@ -31,7 +31,7 @@ const reportSchema = yup.object({
 
 export function ReportDialog({ postId, userId, open, setOpen, type }: ReportDialogInterface){
     const {mutate: reportMutate, isPending:reportIsPending} = useUserReport()
-    console.log("reportMutate", reportMutate)
+    // console.log("reportMutate", reportMutate)
 
   const {
     register,

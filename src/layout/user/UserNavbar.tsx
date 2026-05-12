@@ -4,7 +4,6 @@ import TextType from "@/components/TextType";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
   ArrowLeft,
-  ArrowRight,
   Bell,
   ChevronDown,
   LogOut,
@@ -45,11 +44,11 @@ const UserNavbar = () => {
         <div className="flex flex-row items-center justify-center">
           <div className="pt-3">
             <button
-              onClick={() => router.back()}
+              onClick={() => router.push("/")}
               className="flex flex-row gap-2 text-[#D493FF] items-center justify-center cursor-pointer"
             >
               <ArrowLeft />
-              Go Back
+              Back To Landing
             </button>{" "}
           </div>
           <div className="pt-3 relative">
@@ -68,9 +67,9 @@ const UserNavbar = () => {
         </div>
 
         <div className="flex items-center gap-3 sm:gap-5 relative z-50">
-          <button className="p-1 hover:bg-white/10 rounded-full transition-colors">
+          {/* <button className="p-1 hover:bg-white/10 rounded-full transition-colors">
             <Bell className="w-5 h-5 text-[#A1A1AA]" />
-          </button>
+          </button> */}
 
           <div
             className="flex items-center gap-2 cursor-pointer group"
@@ -137,15 +136,15 @@ const UserNavbar = () => {
         <div className="flex items-center justify-between px-4 py-3 relative">
           <h1
             onClick={() => router.push("/user/home")}
-            className="font-extrabold cursor-pointer font-serif text-base bg-linear-to-r from-[#D493FF] to-[#FF7354] bg-clip-text text-transparent"
+            className="font-extrabold flex flex-row items-center gap-1 cursor-pointer font-serif text-base bg-linear-to-r from-[#D493FF] to-[#FF7354] bg-clip-text text-transparent"
           >
-            SocialSphere+
+           <Image src={"/images/logo.png"} alt="logo" width={20} height={20} /> SocialSphere+
           </h1>
 
           <div className="flex items-center gap-3 sm:gap-5 relative z-50">
-            <button className="p-1 hover:bg-white/10 rounded-full transition-colors">
+            {/* <button className="p-1 hover:bg-white/10 rounded-full transition-colors">
               <Bell className="w-5 h-5 text-[#A1A1AA]" />
-            </button>
+            </button> */}
 
             <div
               className="flex items-center gap-2 cursor-pointer group"

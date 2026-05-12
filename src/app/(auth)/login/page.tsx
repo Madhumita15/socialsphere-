@@ -13,6 +13,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
+import { ArrowLeft } from "lucide-react";
 
 const Login = () => {
   const { loading, error, loginUser, googleLogin } = useAuthStore();
@@ -53,9 +54,12 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#050505] p-6 sm:p-10">
       <div className="absolute w-75 h-75 bg-purple-600/10 blur-[120px] rounded-full -z-10" />
+      
 
       <Card className="w-full max-w-100 bg-black border-zinc-800 shadow-[0_0_50px_-12px_rgba(212,147,255,0.1)] overflow-hidden transition-all duration-500 hover:border-zinc-700">
+        
         <CardHeader className="space-y-2 pb-8 pt-8 text-center">
+          
           <h1 className="font-medium flex flex-col tracking-wide">
             <span
               className="font-bold text-3xl bg-clip-text text-transparent"
@@ -132,6 +136,7 @@ const Login = () => {
                   Register
                 </Link>
               </p>
+              <Button onClick={()=> router.back()} className={"flex gap-2 cursor-pointer w-25 text-white ml-30"}><ArrowLeft /> Go Back</Button>
             </div>
           </form>
         </CardContent>

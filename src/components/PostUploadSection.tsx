@@ -3,10 +3,9 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { ImagePlus } from 'lucide-react';
+import { PostUploadSectionProps } from '@/typescript/type/post.type';
 
-interface PostUploadSectionProps {
-  onUpload: (file: File) => void;
-}
+
 
 export default function PostUploadSection({ onUpload }: PostUploadSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);

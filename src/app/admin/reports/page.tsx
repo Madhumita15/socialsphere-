@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { 
   Trash2, 
   Eye, 
-  RefreshCcw, 
   CheckCircle, 
   ChevronRight,
   Filter
@@ -31,7 +30,7 @@ export default function ModeratorReports() {
   const { data, isLoading, isError, error } = useGetModeratorReports();
   const {mutate:resolveMutate, isPending:resolvePending, variables:resolveVariables} = useResoveModeratorReports()
   const {mutate:removeMutate, isPending:removePending, variables:removeVariables} = useRemoveModeratorReports()
-  console.log("data", data)
+  // console.log("data", data)
   
   
 

@@ -6,25 +6,13 @@ import Image from "next/image";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCreateFollow, useGetFollow } from "@/hooks/useFollow";
 import { useToggleLike } from "@/hooks/useLike";
-import { useRouter } from "next/navigation";
 import { useShare } from "@/hooks/useShare";
 import { useBookMark } from "@/hooks/useBookMark";
 import { useState } from "react";
 import { ReportDialog } from "./userReports/ReportDialog";
+import { ReelsVideoProps } from "@/typescript/type/reel.type";
 
-interface ReelsVideoProps {
-  username: string;
-  caption: string;
-  likes: number;
-  comments: number;
-  videoSrc: string;
-  authorName: string;
-  avatar_url: string;
-  userId: string;
-  user_has_liked: boolean;
-  id: string;
-  isSaved: boolean;
-}
+
 
 export function ReelsVideo({
   id,
@@ -43,7 +31,6 @@ export function ReelsVideo({
   const { mutate: followMutate, isPending } = useCreateFollow();
   const { data } = useGetFollow(userId);
   const { mutate: mutateLike } = useToggleLike();
-  const router = useRouter();
   const { handleShare } = useShare();
   const { mutate: bookMarkMutate } = useBookMark();
   const [open, setOpen] = useState(false)
@@ -52,7 +39,7 @@ export function ReelsVideo({
   return (
     <div
       className="relative h-screen w-full snap-start overflow-hidden cursor-pointer bg-black"
-      onClick={() => router.push(`reels/${id}`)}
+     
     >
       {/* Video Background */}
       <video
