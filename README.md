@@ -467,3 +467,45 @@ Folder Structur:
 └── ⚙️ tsconfig.json
 
 
+⚙️ Installation
+
+Clone Repository
+git clone https://github.com/your-username/socialsphere.git
+Move into Project Directory
+cd socialsphere
+Install Dependencies
+npm install
+Run Development Server
+npm run dev
+
+
+🔑 Environment Variables
+
+Create a .env.local file:
+
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+🎯 Key Learning Outcomes
+
+This project helped in understanding:
+
+Production-level frontend architecture
+Role-based access systems
+Real-time moderation workflows
+Scalable state management
+Database relationship management
+Analytics dashboard development
+Performance optimization techniques
+
+
+👩‍💻 Developed By
+
+Madhumita Das
+
+Final Project developed under the guidance of Tanmay Shill Sir.
+
+📜 License
+
+This project is developed for educational, learning, and portfolio purposes.
+
+
