@@ -18,6 +18,7 @@ const Analytics = () => {
     useEngagementState();
   const { data: growthData } = useUserGrowthRate();
   const { isLoading: growthChartIsLoading } = useUserGrowth();
+  
 
   return (
     <>

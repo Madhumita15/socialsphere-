@@ -21,6 +21,7 @@ const AnalyticsChartSection = () => {
     error: growthChartError,
     isLoading: growthChartIsLoading,
   } = useUserGrowth();
+  console.log(growthChartData)
   const growthPercentageData: GrowthPercentageDataType[] | undefined =
     growthChartData?.map(
       (
