@@ -259,3 +259,211 @@ Lazy loading
 Optimistic updates
 Efficient API refetching
 Role-based route protection
+
+
+Folder Structur:
+
+├── 📁 public/
+│   ├── 📁 images/
+│   │   ├── 🖼️ image1.png
+│   │   ├── 🖼️ logo.png
+│   │   └── 🖼️ profile.jpg
+│   ├── 🖼️ file.svg
+│   ├── 🖼️ globe.svg
+│   ├── 🖼️ next.svg
+│   ├── 🖼️ vercel.svg
+│   └── 🖼️ window.svg
+├── 📁 src/
+│   ├── 📁 app/
+│   │   ├── 📁 (auth)/
+│   │   │   ├── 📁 login/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 register/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   └── 📁 userProfile/
+│   │   │       └── 📄 page.tsx
+│   │   ├── 📁 admin/
+│   │   │   ├── 📁 analytics/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 contentModeration/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 dashboard/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 moderatorContentModeration/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 reports/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 userManagement/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   └── 📄 layout.tsx
+│   │   ├── 📁 auth/
+│   │   │   └── 📁 callback/
+│   │   │       └── 📄 page.tsx
+│   │   ├── 📁 banned/
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 user/
+│   │   │   ├── 📁 direct/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 discovery/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 home/
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 profile/
+│   │   │   │   ├── 📁 post/
+│   │   │   │   │   └── 📁 [id]/
+│   │   │   │   │       └── 📄 page.tsx
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 reels/
+│   │   │   │   ├── 📁 [id]/
+│   │   │   │   │   └── 📄 page.tsx
+│   │   │   │   └── 📄 page.tsx
+│   │   │   └── 📄 layout.tsx
+│   │   ├── 📄 favicon.ico
+│   │   ├── 🎨 globals.css
+│   │   ├── 📄 layout.tsx
+│   │   ├── 📄 not-found.tsx
+│   │   └── 📄 page.tsx
+│   ├── 📁 components/
+│   │   ├── 📁 adminAnalytics/
+│   │   │   ├── 📄 AnalyticsChartSection.tsx
+│   │   │   └── 📄 AnalyticsTrendingContent.tsx
+│   │   ├── 📁 adminContentControl/
+│   │   │   ├── 📄 AdminContentControlTable.tsx
+│   │   │   ├── 📄 AdminContentPagination.tsx
+│   │   │   └── 📄 ContentStats.tsx
+│   │   ├── 📁 adminDashboard/
+│   │   │   ├── 📄 AdminDashboardTrendingContent.tsx
+│   │   │   ├── 📄 AdminUserGrowthChart.tsx
+│   │   │   ├── 📄 RecentSignUp.tsx
+│   │   │   └── 📄 StatsCard.tsx
+│   │   ├── 📁 adminUserManagement/
+│   │   │   ├── 📄 UserTable.tsx
+│   │   │   └── 📄 UserTablePagination.tsx
+│   │   ├── 📁 moderatorDashboard/
+│   │   │   └── 📄 ModeratorDashboardStats.tsx
+│   │   ├── 📁 moderatorReport/
+│   │   │   └── 📄 ReviewPostDialog.tsx
+│   │   ├── 📁 profile/
+│   │   │   ├── 📄 PostDialog.tsx
+│   │   │   ├── 📄 PostGrid.tsx
+│   │   │   ├── 📄 ProfileDialog.tsx
+│   │   │   ├── 📄 ProfileHeader.tsx
+│   │   │   └── 📄 ProfileTabs.tsx
+│   │   ├── 📁 ui/
+│   │   │   ├── 📄 avatar.tsx
+│   │   │   ├── 📄 badge.tsx
+│   │   │   ├── 📄 button.tsx
+│   │   │   ├── 📄 card.tsx
+│   │   │   ├── 📄 collapsible.tsx
+│   │   │   ├── 📄 dialog.tsx
+│   │   │   ├── 📄 input.tsx
+│   │   │   ├── 📄 label.tsx
+│   │   │   ├── 📄 progress.tsx
+│   │   │   ├── 📄 radio-group.tsx
+│   │   │   ├── 📄 select.tsx
+│   │   │   ├── 📄 skeleton.tsx
+│   │   │   ├── 📄 spinner.tsx
+│   │   │   ├── 📄 table.tsx
+│   │   │   ├── 📄 tabs.tsx
+│   │   │   └── 📄 textarea.tsx
+│   │   ├── 📁 userReports/
+│   │   │   └── 📄 ReportDialog.tsx
+│   │   ├── 📄 AdminDashboard.tsx
+│   │   ├── 📄 DynamicInput.tsx
+│   │   ├── 📄 FeedCard.tsx
+│   │   ├── 📄 MessageBubble.tsx
+│   │   ├── 📄 MessageSidebarItem.tsx
+│   │   ├── 📄 ModeratorDashboard.tsx
+│   │   ├── 🎨 Particles.css
+│   │   ├── 📄 Particles.tsx
+│   │   ├── 📄 PostCard.tsx
+│   │   ├── 📄 PostUploadSection.tsx
+│   │   ├── 📄 ReelsUploadSection.tsx
+│   │   ├── 📄 ReelsVideo.tsx
+│   │   ├── 📄 SingleReel.tsx
+│   │   ├── 🎨 TextType.css
+│   │   └── 📄 TextType.tsx
+│   ├── 📁 hooks/
+│   │   ├── 📄 useAdminModeration.ts
+│   │   ├── 📄 useAdminStats.ts
+│   │   ├── 📄 useAdminUserMnagement.ts
+│   │   ├── 📄 useBookMark.ts
+│   │   ├── 📄 useFollow.ts
+│   │   ├── 📄 useLike.ts
+│   │   ├── 📄 useModeratorFlaggedControl.ts
+│   │   ├── 📄 useModeratorReports.ts
+│   │   ├── 📄 usePost.ts
+│   │   ├── 📄 useShare.ts
+│   │   └── 📄 useUserReport.ts
+│   ├── 📁 layout/
+│   │   ├── 📁 admin/
+│   │   │   ├── 📄 AdminNavbar.tsx
+│   │   │   └── 📄 AdminSidebar.tsx
+│   │   ├── 📁 landing/
+│   │   │   ├── 📄 LandingFooter.tsx
+│   │   │   └── 📄 LandingNavbar.tsx
+│   │   └── 📁 user/
+│   │       ├── 📄 UserNavbar.tsx
+│   │       └── 📄 UserSidebar.tsx
+│   ├── 📁 lib/
+│   │   ├── 📄 supabaseClient.ts
+│   │   └── 📄 utils.ts
+│   ├── 📁 services/
+│   │   ├── 📁 helper/
+│   │   │   ├── 📁 apiFunction/
+│   │   │   │   ├── 📄 adminModeration.function.ts
+│   │   │   │   ├── 📄 bookmark.function.ts
+│   │   │   │   ├── 📄 follow.function.ts
+│   │   │   │   ├── 📄 getAllUser.function.ts
+│   │   │   │   ├── 📄 like.function.ts
+│   │   │   │   ├── 📄 moderatorFlaggedControl.function.ts
+│   │   │   │   ├── 📄 post.function.ts
+│   │   │   │   └── 📄 userReport.function.ts
+│   │   │   └── 📁 provider/
+│   │   │       └── 📄 QueryProvider.tsx
+│   │   ├── 📁 json/
+│   │   │   ├── 📁 inputsData/
+│   │   │   │   ├── 📄 auth.inputs.ts
+│   │   │   │   └── 📄 post.input.ts
+│   │   │   └── 📁 lottie/
+│   │   │       ├── ⚙️ Loading animation.json
+│   │   │       ├── ⚙️ Login.json
+│   │   │       └── ⚙️ Not Found.json
+│   │   └── 📁 validation/
+│   │       ├── 📄 auth.validation.ts
+│   │       └── 📄 post.validation.ts
+│   ├── 📁 store/
+│   │   └── 📄 useAuthStore.ts
+│   ├── 📁 typescript/
+│   │   ├── 📁 interface/
+│   │   │   ├── 📄 admin.interface.ts
+│   │   │   ├── 📄 auth.interface.ts
+│   │   │   ├── 📄 post.interface.ts
+│   │   │   ├── 📄 reel.interface.ts
+│   │   │   └── 📄 share.interface.ts
+│   │   └── 📁 type/
+│   │       ├── 📄 adminDashboard.type.ts
+│   │       ├── 📄 adminUserManagement.type.ts
+│   │       ├── 📄 analystics.type.ts
+│   │       ├── 📄 auth.type.ts
+│   │       ├── 📄 dynamicInput.function.ts
+│   │       ├── 📄 follow.type.ts
+│   │       ├── 📄 input.type.ts
+│   │       ├── 📄 post.type.ts
+│   │       ├── 📄 reel.type.ts
+│   │       ├── 📄 text.type.ts
+│   │       └── 📄 userReport.type.ts
+│   └── 📄 proxy.ts
+├── ⚙️ .gitignore
+├── 📝 AGENTS.md
+├── 📝 CLAUDE.md
+├── 📝 README.md
+├── ⚙️ components.json
+├── 📄 eslint.config.mjs
+├── 📄 next.config.ts
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+├── 📄 postcss.config.mjs
+└── ⚙️ tsconfig.json
+
+
