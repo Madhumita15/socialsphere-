@@ -35,6 +35,7 @@ export const useResoveModeratorReports = () => {
       queryClient.invalidateQueries({ queryKey: ["get-moderator-report"] });
       queryClient.invalidateQueries({ queryKey: ["getPost"] });
       queryClient.invalidateQueries({ queryKey: ["infinitypost"] });
+      queryClient.invalidateQueries({queryKey: ["get-flaged-post"]})
     },
   });
 };
@@ -51,6 +52,7 @@ export const useRemoveModeratorReports = () => {
       queryClient.invalidateQueries({ queryKey: ["get-moderator-report"] });
       queryClient.invalidateQueries({ queryKey: ["getPost"] });
       queryClient.invalidateQueries({ queryKey: ["infinitypost"] });
+      queryClient.invalidateQueries({queryKey: ["get-flaged-post"]})
     },
   });
 };

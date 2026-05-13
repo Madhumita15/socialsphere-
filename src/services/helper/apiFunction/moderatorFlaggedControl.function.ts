@@ -4,7 +4,7 @@ export const getModeratorFlaggedControl = async () => {
   const { data, error } = await supabase
     .from("posts")
     .select(`*, author:profile(username, fullname, avatar_url), report:reports(id, category, status)`)
-    .gte("report_count", 5)
+    .gte("report_count", 2)
     .eq("is_deleted", false)
     .order("report_count", { ascending: false });
   if (error) throw error;
@@ -15,7 +15,9 @@ export const getModeratorFlaggedControl = async () => {
 
 export const approveModeratorFlaggedControl = async(post_id: string)=>{
     const {data:approvePostData, error:approvePostError} = await supabase.from("posts").update({
-        report_count: 0
+        report_count: 0,
+        visibility: "public",
+        is_deleted: "false"
     }).eq("id", post_id).maybeSingle()
     if(approvePostError) throw approvePostError
     const {error: rpcError} = await supabase.rpc("update_approve_post", {target_id: post_id})
@@ -31,7 +33,8 @@ export const approveModeratorFlaggedControl = async(post_id: string)=>{
 
 export const rejectModeratorFlaggedControl = async(post_id: string)=>{
     const {data:approvePostData, error:approvePostError} = await supabase.from("posts").update({
-        is_deleted: true
+        is_deleted: true,
+        visibility: "hidden"
     }).eq("id", post_id).maybeSingle()
     if(approvePostError) throw approvePostError
     const {error: rpcError} = await supabase.rpc("update_reject_error", {target_id: post_id})

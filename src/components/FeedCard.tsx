@@ -45,7 +45,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
 
   const [revealed, setRevealed] = useState(false);
   
-  const isFlagged = report_count >= 5;
+  const isFlagged = report_count >= 2;
   const shouldHide = isFlagged && !revealed;
 
 

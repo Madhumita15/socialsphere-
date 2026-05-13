@@ -7,8 +7,8 @@ export const usePostUsersStats = ()=>{
         queryKey: ["user-post-stats"],
         queryFn: async()=>{
             const [users, posts] = await Promise.all([
-                supabase.from("profile").select("*", {count: "exact", head: true}),
-                supabase.from("posts").select("*", {count: "exact", head: true})
+                supabase.from("profile").select("*", {count: "exact", head: true}).eq("status", "active"),
+                supabase.from("posts").select("*", {count: "exact", head: true}).eq("is_deleted", false).in("visibility", ["public", "flagged"])
             ])
             return {
                 totalUsers: users.count || 0,
@@ -20,28 +20,33 @@ export const usePostUsersStats = ()=>{
 }
 
 
-export const useEngagementState = ()=>{ //engagement means total like + comment + save post, means action of users performs to post
-    return useQuery({
-        queryKey: ["engagement"],
-        queryFn: async()=>{
-            const [likes, bookmark] = await Promise.all([
-                supabase.from("likes").select("*", {count: "exact", head: true}),
-                supabase.from("bookmark").select("*", {count: "exact", head: true})
-            ])
-            return {
-                totalEngagement: (likes.count || 0) + (bookmark.count || 0)
-            }
-        },
-        refetchInterval: 1000 * 60
-    })
-}
 
+
+
+ //engagement means total like + comment + save post, means action of users performs to post
+
+export const useEngagementState = () => {
+  return useQuery({
+    queryKey: ["engagement"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_total_engagement");
+
+      if (error) throw error;
+
+      return {
+        totalEngagement: data || 0,
+      };
+    },
+
+    refetchInterval: 1000 * 60,
+  });
+};
 
 export const useRecentSignUps = ()=>{ // recentusers 
     return useQuery({
         queryKey: ["recent-signups"],
         queryFn: async()=>{
-            const {data:recentData, error:recentError} = await supabase.from("profile").select("*").neq("role", "admin").order("created_at", {ascending: false}).limit(5)
+            const {data:recentData, error:recentError} = await supabase.from("profile").select("*").neq("role", "admin").eq("status", "active").order("created_at", {ascending: false}).limit(5)
             if(recentError) throw recentError
             return recentData
         }
@@ -57,8 +62,8 @@ export const useUserGrowthRate = ()=>{ // previos month users vs cuurent users  
             const thirtyDaysAgo = new Date()
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate()- 30)
             const [currentUser, previousUser] = await Promise.all([
-                supabase.from("profile").select("*", {count: "exact", head: true}),
-                supabase.from("profile").select("*", {count: "exact", head: true}).lt("created_at", thirtyDaysAgo)
+                supabase.from("profile").select("*", {count: "exact", head: true}).eq("status", "active"),
+                supabase.from("profile").select("*", {count: "exact", head: true}).lt("created_at", thirtyDaysAgo).eq("status", "active")
             ])
 
           const totalCurrentUser = currentUser.count || 0

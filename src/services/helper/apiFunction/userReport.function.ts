@@ -37,7 +37,7 @@ export const getModeratorReport = async () => {
           visibility,
           is_pinned,
           trending_score,
-          user_id)`).order("created_at", {ascending: false});
+          user_id)`).eq("status", "pending").order("created_at", {ascending: false});
   if (error) throw error;
   return data;
 };
@@ -89,7 +89,7 @@ export const resolveModeratorReports = async ({id, postId}:{id: string, postId:s
 
 
 export const removeModeratorReports = async ({report_id, post_id}: {report_id: string, post_id: string})=>{
-  console.log("report", report_id, post_id)
+  // console.log("report", report_id, post_id)
   const {data:postData, error:postError} = await supabase.from("posts").update({
     is_deleted: true
   }).eq("id", post_id).maybeSingle()
@@ -97,7 +97,7 @@ export const removeModeratorReports = async ({report_id, post_id}: {report_id: s
   console.log("postData", postData)
 
   const {data: reportData,error: reportError} = await supabase.from("reports").update({
-    status: "take_action"
+    status: "action_taken"
   }).eq("id", report_id).maybeSingle()
 
   if(reportError) throw postError

@@ -12,7 +12,6 @@ const BannedPage = () => {
     <>
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4 selection:bg-[#D493FF]/30">
         <div className="relative group max-w-md w-full">
-          <Link href={"/"} className="text-white text-lg">Go Back <ArrowRight /></Link>
           {/* Animated Gradient Glow */}
           <div className="absolute -inset-1 bg-linear-to-r from-[#D493FF] to-[#FF7354] rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition duration-1000"></div>
 
