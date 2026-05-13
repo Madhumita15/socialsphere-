@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {  useState, useSyncExternalStore } from "react";
 
@@ -28,9 +29,9 @@ function useIsClinet (){
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <div
           onClick={() => router.push("/")}
-          className="cursor-pointer font-extrabold font-serif leading-8 tracking-[-0.4px]  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent"
+          className="cursor-pointer font-extrabold font-serif leading-8 tracking-[-0.4px] flex flex-row gap-1 items-center  text-[24px] bg-linear-to-r from-[#D493FF]  to-[#FF7354] bg-clip-text text-transparent"
         >
-          SocialSphere+
+          <Image src={"/images/logo.png"} alt="logo" width={25} height={25} /> SocialSphere+
         </div>
         <div className="hidden md:flex items-center gap-8">
           {isClient &&

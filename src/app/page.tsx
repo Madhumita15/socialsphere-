@@ -20,7 +20,7 @@ const MOCK_POSTS = [
   {
     id: 1,
     username: "alex_tech",
-    avatar: "/images/profile.png",
+    avatar: "/images/profile.jpg",
     image: "/images/image1.png",
     likes: "1.2k",
     caption:
@@ -29,7 +29,7 @@ const MOCK_POSTS = [
   {
     id: 2,
     username: "creative_mia",
-    avatar: "/images/profile.png",
+    avatar: "/images/profile.jpg",
     image: "/images/image1.png",
     likes: "850",
     caption: "Exploring new digital horizons. The UI is just ",
