@@ -470,7 +470,7 @@ Folder Structur:
 ⚙️ Installation
 
 Clone Repository
-git clone https://github.com/your-username/socialsphere.git
+https://github.com/Madhumita15/socialsphere-.git
 Move into Project Directory
 cd socialsphere
 Install Dependencies
